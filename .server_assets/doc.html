@@ -123,37 +123,37 @@ TAB:
 		<br>
 		def error(client, error, errmsg = nil)
 		<br>
-	#If error message is provided, print it
+&nbsp;&nbsp;&nbsp;&nbsp;	#If error message is provided, print it
 		<br>
-	if errmsg != nil
+	&nbsp;&nbsp;&nbsp;&nbsp;if errmsg != nil
 		<br>
-		errmsg = errmsg.to_s
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	errmsg = errmsg.to_s
 		<br>
-		puts "#{Time.now.ctime.split(" ")[3]} | ERROR: " + errmsg.to_s
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	puts "#{Time.now.ctime.split(" ")[3]} | ERROR: " + errmsg.to_s
 		<br>
-	end
+&nbsp;&nbsp;&nbsp;&nbsp;	end
 		<br>
-	#Convert error code to integer
+&nbsp;&nbsp;&nbsp;&nbsp;	#Convert error code to integer
 		<br>
-	error = error.to_i
+&nbsp;&nbsp;&nbsp;&nbsp;	error = error.to_i
 		<br>
-	if error == 404
+&nbsp;&nbsp;&nbsp;&nbsp;	if error == 404
 		<br>
-		response(client, 404, ["content-type: text/html"], File.read("./.server_assets/404.html"))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		response(client, 404, ["content-type: text/html"], File.read("./.server_assets/404.html"))
 		<br>
-	elsif error == 500 && errmsg
+&nbsp;&nbsp;&nbsp;&nbsp;	elsif error == 500 && errmsg
 		<br>
-		response(client, 500, ["content-type: text/html"], File.read("./.server_assets/500_error.html").gsub("<ERR>", errmsg))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		response(client, 500, ["content-type: text/html"], File.read("./.server_assets/500_error.html").gsub("<ERR>", errmsg))
 		<br>
-	elsif error == 500
+&nbsp;&nbsp;&nbsp;&nbsp;	elsif error == 500
 		<br>
-		response(client, 500, ["content-type: text/html"], File.read("./.server_assets/500.html"))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;		response(client, 500, ["content-type: text/html"], File.read("./.server_assets/500.html"))
 		<br>
-	else
+&nbsp;&nbsp;&nbsp;&nbsp;	else
 		<br>
-		response(client, error, ["content-type: text/html"], File.read("./.server_assets/error_default.html").gsub("<ERRORCODE>", error.to_s))
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	response(client, error, ["content-type: text/html"], File.read("./.server_assets/error_default.html").gsub("<ERRORCODE>", error.to_s))
 		<br>
-	end
+&nbsp;&nbsp;&nbsp;&nbsp;	end
 		<br>
 end
 	</div>
