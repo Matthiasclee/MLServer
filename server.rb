@@ -98,9 +98,8 @@ $PORT = params["port"].to_i
 $SSL_PORT = params["ssl-port"].to_i
 
 #Start the server
-# loop do
-# begin
 	tcp_server = TCPServer.new($HOST, $PORT)
+	#SSL
 	if params["ssl"]
 		ctx = OpenSSL::SSL::SSLContext.new
 		ctx.key = OpenSSL::PKey::RSA.new File.read params["ssl-key"]
@@ -218,4 +217,3 @@ $SSL_PORT = params["ssl-port"].to_i
 		end
 	end
 end
-# end
