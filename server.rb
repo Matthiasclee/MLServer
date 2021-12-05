@@ -1,4 +1,4 @@
-$ver = "MLServer 0.0.2.3 Ruby"
+$ver = "MLServer 0.0.2.4 Ruby"
 require "./.server_assets/local_debug.rb"
 require "socket"
 require "openssl"
@@ -208,7 +208,7 @@ $SSL_PORT = params["ssl-port"].to_i
 			begin
 				error(client, 500, error)
 			rescue
-				puts "#{Time.now.ctime.split(" ")[3]} | Error: #{$error}"
+				puts "#{Time.now.ctime.split(" ")[3]} | Unknown client closed. Possibly tried to connect to ssl server without ssl?"
 			end
 		end
 	end
