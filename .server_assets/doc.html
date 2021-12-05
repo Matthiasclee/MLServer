@@ -1,0 +1,121 @@
+<!--
+TAB:
+&nbsp;&nbsp;&nbsp;&nbsp;
+<:
+&#60;
+-->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MLServer Documentation</title>
+	<style type="text/css">
+		.code{
+			background-color: #c0c6cf;
+			border-radius: 3px;
+			font-family: "Courier New";
+			display: inline-block;
+		}
+	</style>
+</head>
+<body>
+	<h1>MLServer Documentation</h1>
+	<p>Server Code Template:</p>
+	<div class="code">
+		<p>require "./server.rb"</p>
+		<p>def main()<br>&nbsp;&nbsp;&nbsp;&nbsp;def path(client, data)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#Code Here<br>&nbsp;&nbsp;&nbsp;&nbsp;end<br>end<br><br>start()</p>
+	</div>
+	<p>This code is a template for an actual server that serves web pages.</p>
+	<h3 id="handling_requests">Handling requests</h3>
+	<p>When the server receives a request, it calls the path() function with two arguments: the client that made the request, and the data that the server compiled together to give to the function. You then can send back a response.</p>
+	<p>Example code that sends back "hi" to the client:</p>
+	<div class="code">
+		<p>require "./server.rb"</p>
+		<p>def main()<br>&nbsp;&nbsp;&nbsp;&nbsp;def path(client, data)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;response(client, 200, ["Content-type: text/plain"], "hi")<br>&nbsp;&nbsp;&nbsp;&nbsp;end<br>end<br><br>start()</p>
+	</div>
+	<h3 id="data">The data parameter</h3>
+	<p>The data parameter is a hash of data.</p>
+	<p>Example data: </p>
+	<div class="code">
+		{
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;"request" => "GET / HTTP/1.1",
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;"headers" => {"Content-Type" => "Text/HTML"}, 
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;"remote_ip" => "192.0. 2.146", 
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;"remote_port" => 80, 
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;"remote_hostname" => "example.com", 
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;"path" => "/test", 
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;"get_params" => {"example" => test}, 
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;"method" => "GET", 
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;"data" => "example=data", 
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;"cookies" => {"ab" => "cookie"}
+			<br>
+		}
+	</div>
+	<h3 id="responses">Responses</h3>
+	<p>Responses can be send by calling response(). response() takes 4 parameters: the client, the status code, the headers (array), and the actual data.</p>
+	<p>Example response:</p>
+	<div class="code">
+		response(client, 200, ["Content-Type: text/html"], "&#60;h1>Very cool data&#60;/h1>")
+	</div>
+	<p>Running that code in the path() function will give</p>
+	<div class="code">
+		<h1>Very cool data</h1>
+	</div>
+	<p>when you visit localhost:80 in a web browser.</p>
+	<h3 id="server-params">Server Parameters</h3>
+	<p>The server can be started with parameters to change the port, what it listens on, and more.</p>
+	<div class="code">
+		params = {}
+		<br>
+		start(params) #Add the params variable to start()
+	</div>
+	<h3 id="max-clients">Max clients limit</h3>
+	<p>By starting the server with a "max-clients" parameter, you can limit the amount of clients connected at one time. Setting max-clients to -1 or not defining it allows infinite connected clients.</p>
+	<div class="code">
+		params = {"max-clients" => 20} #Only allows 20 concurrent connections to the server.
+		<br>
+		start(params)
+	</div>
+	<h3 id="listen-port">Listen on</h3>
+	<p>By setting "host" and "port" parameters, you can define where the server listens.</p>
+	<p>If you leave this undefined, it defaults to listening on 0.0.0.0 on port 443 for ssl and port 80 for non-ssl.</p>
+	<div class="code">
+		params = {"host" => "0.0.0.0", "port" => 80}	
+	</div>
+	<h3 id="remove-trailing-slash">Remove trailing slash</h3>
+	<p>With the "remove-trailing-slash" parameter, you can redirect requests that end with a slash to the same path without the extra slash.</p>
+	<p>EX: /page/ becomes /page</p>
+	<div class="code">
+		params = {"remove-trailing-slash" => true}	
+	</div>
+	<h3 id="always-add-content-length">Always add content length</h3>
+	<p>If you set the server parameter "always-add-content-length" to true or leave it blank, all responses automatically include the Content-Length header.</p>
+	<div class="code">
+		params = {"always-add-content-length" => true}
+	</div>
+	<h3 id="SSL">SSL</h3>
+	<p>With the ssl parameter, you can enable SSL for the server.</p>
+	<p>If you set the parameter "ssl" to true and define "ssl-key" and "ssl-cert", the server will start with SSL.</p>
+	<div class="code">
+		params = {
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;	"ssl" => true, 
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;	"ssl-key" => "./key.key", 
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;	"ssl-cert" => "./certificate.crt"
+		<br>
+		}
+	</div>
+	<p>Using that code and having key.key and certificate.crt be valid and trusted, the server will start with ssl enabled.</p>
+</body>
+</html>
