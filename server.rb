@@ -72,9 +72,11 @@ if params["ssl"] == nil
 	params["ssl"] = false
 end
 if params["ssl-key"] == nil && params["ssl"] == true
+	puts "#{Time.now.ctime.split(" ")[3]} | ERROR: SSL key not provided; starting server without ssl"
 	params["ssl"] = false
 end
 if params["ssl-cert"] == nil && params["ssl"] == true
+	puts "#{Time.now.ctime.split(" ")[3]} | ERROR: SSL cert not provided; starting server without ssl"
 	params["ssl"] = false
 end
 if params["port"] == nil
