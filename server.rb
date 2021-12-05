@@ -32,6 +32,7 @@ def error(client, error, errmsg = nil)
 	else
 		response(client, error, ["content-type: text/html"], File.read("./.server_assets/error_default.html").gsub("<ERRORCODE>", error.to_s))
 	end
+
 end
 
 #Form and send a response to the client
@@ -47,6 +48,7 @@ def response(client, response = 200, headers = ["Content-Type: text/html"], data
 	end
 	client.print "#{headers_s}\r\n"
 	client.print data.to_s
+	close(client)
 end
 
 #Redirect the client
