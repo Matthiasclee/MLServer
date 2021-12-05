@@ -1,4 +1,3 @@
-#test
 $ver = "MLServer 0.0.2.6 Ruby"
 require "./.server_assets/local_debug.rb"
 require "socket"
