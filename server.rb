@@ -1,4 +1,4 @@
-$ver = "MLServer 0.0.2 Ruby"
+$ver = "MLServer 0.0.2.1 Ruby"
 require "./.server_assets/local_debug.rb"
 require "socket"
 require "openssl"
@@ -71,18 +71,18 @@ end
 if params["ssl"] == nil
 	params["ssl"] = false
 end
+if params["ssl-key"] == nil && params["ssl"] == true
+	params["ssl"] = false
+end
+if params["ssl-cert"] == nil && params["ssl"] == true
+	params["ssl"] = false
+end
 if params["port"] == nil
 	if params["ssl"]
 		params["port"] = 443
 	else
 		params["port"] = 80
 	end
-end
-if params["ssl-key"] == nil && params["ssl"] == true
-	params["ssl"] = false
-end
-if params["ssl-cert"] == nil && params["ssl"] == true
-	params["ssl"] = false
 end
 $aacl = params["always-add-content-length"]
 
