@@ -1,9 +1,7 @@
-$ver = "MLServer 0.0.2.2 Ruby"
+$ver = "MLServer 0.0.2.3 Ruby"
 require "./.server_assets/local_debug.rb"
 require "socket"
 require "openssl"
-require "date"
-require "time"
 $clients = [] #Array that stores all open clients
 $aacl = true
 $apim = false
@@ -87,11 +85,6 @@ if params["port"] == nil
 	end
 end
 $aacl = params["always-add-content-length"]
-
-#Not Implemented Yet
-if params["do-self-test"] == nil
-	params["do-self-test"] = false
-end
 
 params["host"] = params["host"].to_s
 params["port"] = params["port"].to_i
@@ -212,10 +205,11 @@ $SSL_PORT = params["ssl-port"].to_i
 		end
 		$serverThread.report_on_exception = true
 		rescue => $error
-		begin
-			error(client, 500, error)
-		rescue
-		end
+			begin
+				error(client, 500, error)
+			rescue
+				puts "#{Time.now.ctime.split(" ")[3]} | Error: #{$error}"
+			end
 		end
 	end
 end
