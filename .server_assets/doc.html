@@ -117,5 +117,45 @@ TAB:
 		}
 	</div>
 	<p>Using that code and having key.key and certificate.crt be valid and trusted, the server will start with ssl enabled.</p>
+	<h3 id="custom-error-handling">Custom Error Handler</h3>
+	<p>You can define the error() function yourself inside of main(). Example error handler:</p>
+	<div class="code">
+		<br>
+		def error(client, error, errmsg = nil)
+		<br>
+	#If error message is provided, print it
+		<br>
+	if errmsg != nil
+		<br>
+		errmsg = errmsg.to_s
+		<br>
+		puts "#{Time.now.ctime.split(" ")[3]} | ERROR: " + errmsg.to_s
+		<br>
+	end
+		<br>
+	#Convert error code to integer
+		<br>
+	error = error.to_i
+		<br>
+	if error == 404
+		<br>
+		response(client, 404, ["content-type: text/html"], File.read("./.server_assets/404.html"))
+		<br>
+	elsif error == 500 && errmsg
+		<br>
+		response(client, 500, ["content-type: text/html"], File.read("./.server_assets/500_error.html").gsub("<ERR>", errmsg))
+		<br>
+	elsif error == 500
+		<br>
+		response(client, 500, ["content-type: text/html"], File.read("./.server_assets/500.html"))
+		<br>
+	else
+		<br>
+		response(client, error, ["content-type: text/html"], File.read("./.server_assets/error_default.html").gsub("<ERRORCODE>", error.to_s))
+		<br>
+	end
+		<br>
+end
+	</div>
 </body>
 </html>
