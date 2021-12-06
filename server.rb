@@ -1,10 +1,9 @@
-$ver = "MLServer 0.0.2.6 Ruby"
+$ver = "MLServer 0.0.2.6.1 Ruby"
 require "./.server_assets/local_debug.rb"
 require "socket"
 require "openssl"
 $clients = [] #Array that stores all open clients
 $aacl = true
-$apim = false
 #Close client and remove from array
 def close(client)
 	$clients.delete(client)
@@ -108,11 +107,8 @@ $SSL_PORT = params["ssl-port"].to_i
 	else
 		server = tcp_server
 	end
-	if !$apim
 	puts "Server listening on #{$HOST}:#{$PORT.to_s}"
 	puts "SSL Mode: #{params["ssl"].to_s}"
-	$apim = true
-	end
 	main
 	loop do
 		begin
