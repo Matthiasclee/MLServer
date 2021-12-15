@@ -1,10 +1,35 @@
-$ver = "MLServer 0.2.6 Ruby"
-require "./.server_assets/local_debug.rb"
+$ver = "MLServer 0.2.7 Ruby"
 require "socket"
 require "openssl"
+require "net/http"
 $clients = [] #Array that stores all open clients
 $aacl = true
 #Close client and remove from array
+if !File.directory?("./.server_assets")
+	Dir.mkdir(".server_assets")
+end
+if !File.exists?("./.server_assets/404.html")
+	File.write("./.server_assets/404.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/404.html")))
+end
+if !File.exists?("./.server_assets/500.html")
+	File.write("./.server_assets/500.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/500.html")))
+end
+if !File.exists?("./.server_assets/500_error.html")
+	File.write("./.server_assets/500_error.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/500_error.html")))
+end
+if !File.exists?("./.server_assets/doc.html")
+	File.write("./.server_assets/doc.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/doc.html")))
+end
+if !File.exists?("./.server_assets/error_default.html")
+	File.write("./.server_assets/error_default.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/error_default.html")))
+end
+if !File.exists?("./.server_assets/index.html")
+	File.write("./.server_assets/index.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/index.html")))
+end
+if !File.exists?("./.server_assets/local_debug.rb")
+	File.write("./.server_assets/local_debug.rb", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/local_debug.rb")))
+end
+require "./.server_assets/local_debug.rb"
 def close(client)
 	$clients.delete(client)
 	begin
