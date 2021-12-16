@@ -1,7 +1,9 @@
-$ver = "MLServer 0.2.7 Ruby"
+$ver_i = 0.3
+$ver = "MLServer #{$ver_i.to_s} Ruby"
 require "socket"
 require "openssl"
 require "net/http"
+require "./.server_assets/client_handler.rb"
 $clients = [] #Array that stores all open clients
 $aacl = true
 #Close client and remove from array
@@ -29,6 +31,9 @@ end
 if !File.exists?("./.server_assets/local_debug.rb")
 	File.write("./.server_assets/local_debug.rb", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/local_debug.rb")))
 end
+if !File.exists?("./.server_assets/client_handler.rb")
+	File.write("./.server_assets/client_handler.rb", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/client_handler.rb")))
+end
 require "./.server_assets/local_debug.rb"
 def close(client)
 	$clients.delete(client)
@@ -44,6 +49,8 @@ def error(client, error, errmsg = nil)
 	if errmsg != nil
 		errmsg = errmsg.to_s
 		puts "#{Time.now.ctime.split(" ")[3]} | ERROR: " + errmsg.to_s
+	else
+		puts "#{Time.now.ctime.split(" ")[3]} | Client had unknown error."
 	end
 	#Convert error code to integer
 	error = error.to_i
@@ -83,8 +90,18 @@ end
 
 def start(params = {"host" => "0.0.0.0", "port" => 80})
 #Define all undefined server parameters
-if params["host"] == nil
-	params["host"] = "0.0.0.0"
+enable_ipv6 = true
+if !params["host"] == nil
+	puts "#{Time.now.ctime.split(" ")[3]} | WARN: parameter 'host' has been deprecated and will be removed in future releases. Please use bind-ipv[4, 6] instead."
+end
+if params["bind-ipv4"] == nil && params["host"] != nil
+	params["bind-ipv4"] = params["host"]
+end
+if params["bind-ipv4"] == nil
+	params["bind-ipv4"] = "0.0.0.0"
+end
+if params["bind-ipv6"] == nil
+	params["bind-ipv6"] = "::"
 end
 if params["max-clients"] == nil
 	params["max-clients"] = -1
@@ -93,7 +110,7 @@ if params["remove-trailing-slash"] == nil
 	params["remove-trailing-slash"] = false
 end
 if params["always-add-content-length"] == nil
-	params["always-add-content-length"] = true
+	params["always-add-content-length"] = false
 end
 if params["ssl"] == nil
 	params["ssl"] = false
@@ -113,123 +130,58 @@ if params["port"] == nil
 		params["port"] = 80
 	end
 end
+
 $aacl = params["always-add-content-length"]
 
 params["host"] = params["host"].to_s
 params["port"] = params["port"].to_i
-$HOST = params["host"].to_s
+$HOST_4 = params["bind-ipv4"]
+$HOST_6 = params["bind-ipv6"]
 $PORT = params["port"].to_i
 $SSL_PORT = params["ssl-port"].to_i
 
 #Start the server
-	tcp_server = TCPServer.new($HOST, $PORT)
+	tcp_server_4 = TCPServer.new($HOST_4, $PORT)
+	tcp_server_6 = TCPServer.new($HOST_6, $PORT)
 	#SSL
 	if params["ssl"]
 		ctx = OpenSSL::SSL::SSLContext.new
 		ctx.key = OpenSSL::PKey::RSA.new File.read params["ssl-key"]
 		ctx.cert = OpenSSL::X509::Certificate.new File.read params["ssl-cert"]
-		server = OpenSSL::SSL::SSLServer.new(tcp_server, ctx)
+		server_4 = OpenSSL::SSL::SSLServer.new(tcp_server_4, ctx)
 	else
-		server = tcp_server
+		server_4 = tcp_server_4
 	end
-	puts "Server listening on #{$HOST}:#{$PORT.to_s}"
-	puts "SSL Mode: #{params["ssl"].to_s}"
+	if params["ssl"]
+		ctx = OpenSSL::SSL::SSLContext.new
+		ctx.key = OpenSSL::PKey::RSA.new File.read params["ssl-key"]
+		ctx.cert = OpenSSL::X509::Certificate.new File.read params["ssl-cert"]
+		server_6 = OpenSSL::SSL::SSLServer.new(tcp_server_6, ctx)
+	else
+		server_6 = tcp_server_6
+	end
+	puts "#{Time.now.ctime.split(" ")[3]} | #{$ver}"
+	puts "#{Time.now.ctime.split(" ")[3]} | Server listening on #{$HOST_4}:#{$PORT.to_s} and [#{$HOST_6}]:#{$PORT.to_s}"
+	puts "#{Time.now.ctime.split(" ")[3]} | SSL Mode: #{params["ssl"].to_s}"
 	main
+	$lfc4 = true
+	$lfc6 = true
 	loop do
 		begin
-			$serverThread = Thread.start(server.accept) do |client|
-				remote_port, remote_hostname, remote_ip = client.peeraddr
-				#See if there is room to accept client (-1 max clients sets no limit)
-				if $clients.length == params["max-clients"]
-					puts "#{Time.now.ctime.split(" ")[3]} | #{remote_ip} was closed: MAX_CLIENTS_REACHED"
-					client.close()
-					Thread.exit
+			if $lfc4
+				$lfc4 = false
+				$serverThread4 = Thread.start(server_4.accept) do |client|
+					$lfc4 = true
+					clientHandler(client, params)
 				end
-
-				#Add client to array
-				$clients << client
-				keepReading = true
-				$headers_list = []
-				$headers = {}
-				$data = ""
-				req = client.gets
-
-				#Close if bad request
-				if req.to_s.length < 3
-					close(client)
-					Thread.exit
-				end
-
-
-				begin
-					type = req.split(" ")[0]
-					path = req.split(" ")[1]
-					httpver = req.split(" ")[2]
-					if params["remove-trailing-slash"] == true && path[path.length-1] == "/" && path != "/"
-						path_ = path.split("")
-						path_[path.length-1] = ""
-						redirect(client, path_.join)
-					end
-				rescue => error
-					error(client, 500, error)
-				end
-
-				#Get all headers
-				puts "#{Time.now.ctime.split(" ")[3]} | #{remote_ip.to_s} => #{type} #{path}"
-				while keepReading do
-					x = client.gets
-					if x.chomp.length == 0
-						keepReading = false
-					else
-						begin
-							$headers[x.split(": ")[0]] = x.split(": ")[1].chomp
-							$headers_list << x.split(": ")[0]
-						rescue => error
-							error(client, 500, error)
-						end
-					end
-				end
-
-				#Get Cookies
-				if $headers["Cookie"]
-					cookies_ = $headers["Cookie"].split("; ")
-					cookies = {}
-					for c in cookies_ do
-						cookies[c.split("=")[0]] = c.split("=")[1]
-					end
-				else
-					cookies = {}
-				end
-
-				#Get payload data
-				data = client.read($headers["Content-Length"].to_i)
-
-				#Generate response
-				get_params = path.split("?")[1].to_s.split("&")
-				gp_final = {}
-				for x in get_params do
-					gp_final[x.split("=")[0]] = x.split("=")[1]
-				end
-				data = {"request" => req, "headers" => $headers, "remote_ip" => remote_ip, "remote_port" => remote_port, "remote_hostname" => remote_hostname, "path" => path.split("?")[0], "get_params" => gp_final, "method" => type, "data" => data, "cookies" => cookies}
-				if path.split("/")[1] == "__" && remote_ip == "127.0.0.1"
-					begin
-						path_debug(client, data)
-					rescue => error
-						error(client, 500, error)
-					end
-				else
-					begin
-						path(client, data)
-					rescue => error
-						error(client, 500, error)
-					end
-				end
-
-
-
-				close(client)
 			end
-			$serverThread.report_on_exception = true
+			if $lfc6
+				$lfc6 = false
+				$serverThread6 = Thread.start(server_6.accept) do |client|
+					$lfc6 = true
+					clientHandler(client, params)
+				end
+			end
 		rescue => $error
 			begin
 				error(client, 500, error)
