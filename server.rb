@@ -1,9 +1,7 @@
-$ver_i = 0.3
-$ver = "MLServer #{$ver_i.to_s} Ruby"
+$ver = "MLServer 0.3.1 Ruby"
 require "socket"
 require "openssl"
 require "net/http"
-require "./.server_assets/client_handler.rb"
 $clients = [] #Array that stores all open clients
 $aacl = true
 #Close client and remove from array
@@ -35,6 +33,7 @@ if !File.exists?("./.server_assets/client_handler.rb")
 	File.write("./.server_assets/client_handler.rb", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/client_handler.rb")))
 end
 require "./.server_assets/local_debug.rb"
+require "./.server_assets/client_handler.rb"
 def close(client)
 	$clients.delete(client)
 	begin
