@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.1 Ruby"
+$ver = "MLServer 0.3.2 Ruby"
 require "socket"
 require "openssl"
 require "net/http"
@@ -89,6 +89,7 @@ end
 
 def start(params = {"host" => "0.0.0.0", "port" => 80})
 #Define all undefined server parameters
+$ip_protocols = []
 enable_ipv6 = true
 if !params["host"] == nil
 	puts "#{Time.now.ctime.split(" ")[3]} | WARN: parameter 'host' has been deprecated and will be removed in future releases. Please use bind-ipv[4, 6] instead."
@@ -129,6 +130,12 @@ if params["port"] == nil
 		params["port"] = 80
 	end
 end
+if params["ipv6"] == nil
+	params["ipv6"] = false
+end
+if params["ipv4"] == nil
+	params["ipv4"] = true
+end
 
 $aacl = params["always-add-content-length"]
 
@@ -160,21 +167,31 @@ $SSL_PORT = params["ssl-port"].to_i
 		server_6 = tcp_server_6
 	end
 	puts "#{Time.now.ctime.split(" ")[3]} | #{$ver}"
-	puts "#{Time.now.ctime.split(" ")[3]} | Server listening on #{$HOST_4}:#{$PORT.to_s} and [#{$HOST_6}]:#{$PORT.to_s}"
+	puts "#{Time.now.ctime.split(" ")[3]} | Server listening on #{
+		if params["ipv4"] && params["ipv6"]
+			"#{$HOST_4}:#{$PORT.to_s} and [#{$HOST_6}]:#{$PORT.to_s}"
+		elsif params["ipv4"]
+			"#{$HOST_4}:#{$PORT.to_s}"
+		elsif params["ipv6"]
+			"[#{$HOST_6}]:#{$PORT.to_s}"
+		else
+			"nothing"
+		end
+	}"
 	puts "#{Time.now.ctime.split(" ")[3]} | SSL Mode: #{params["ssl"].to_s}"
 	main
 	$lfc4 = true
 	$lfc6 = true
 	loop do
 		begin
-			if $lfc4
+			if $lfc4 && params["ipv4"]
 				$lfc4 = false
 				$serverThread4 = Thread.start(server_4.accept) do |client|
 					$lfc4 = true
 					clientHandler(client, params)
 				end
 			end
-			if $lfc6
+			if $lfc6 && params["ipv6"]
 				$lfc6 = false
 				$serverThread6 = Thread.start(server_6.accept) do |client|
 					$lfc6 = true
