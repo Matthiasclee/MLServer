@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.3 Ruby"
+$ver = "MLServer 0.3.4 Ruby"
 require "socket"
 require "openssl"
 require "net/http"
@@ -135,6 +135,17 @@ if params["ipv6"] == nil
 end
 if params["ipv4"] == nil
 	params["ipv4"] = true
+end
+domainmatch = /^((([0-9a-zA-Z-]{1,63}\.)+[0-9a-zA-Z-]{2,63})|localhost)$/
+ipv4match = /^([0-2])?([0-5])?[0-5]\.([0-2])?([0-5])?[0-5]\.([0-2])?([0-5])?[0-5]\.([0-2])?([0-5])?[0-5]$/
+ipv6match = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/
+if !params["bind-ipv4"].match(ipv4match) && !params["bind-ipv4"].match(domainmatch)
+	params["ipv4"] = false
+	puts "#{Time.now.ctime.split(" ")[3]} | IPv4 address invalid, starting without ipv4"
+end
+if !params["bind-ipv6"].match(ipv6match) && !params["bind-ipv6"].match(domainmatch)
+	params["ipv6"] = false
+	puts "#{Time.now.ctime.split(" ")[3]} | IPv6 address invalid, starting without ipv6"
 end
 
 $aacl = params["always-add-content-length"]
