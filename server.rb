@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.2 Ruby"
+$ver = "MLServer 0.3.3 Ruby"
 require "socket"
 require "openssl"
 require "net/http"
@@ -147,10 +147,14 @@ $PORT = params["port"].to_i
 $SSL_PORT = params["ssl-port"].to_i
 
 #Start the server
-	tcp_server_4 = TCPServer.new($HOST_4, $PORT)
-	tcp_server_6 = TCPServer.new($HOST_6, $PORT)
+	if params["ipv4"]
+		tcp_server_4 = TCPServer.new($HOST_4, $PORT)
+	end
+	if params["ipv6"]
+		tcp_server_6 = TCPServer.new($HOST_6, $PORT)
+	end
 	#SSL
-	if params["ssl"]
+	if params["ssl"] && params["ipv4"]
 		ctx = OpenSSL::SSL::SSLContext.new
 		ctx.key = OpenSSL::PKey::RSA.new File.read params["ssl-key"]
 		ctx.cert = OpenSSL::X509::Certificate.new File.read params["ssl-cert"]
@@ -158,13 +162,17 @@ $SSL_PORT = params["ssl-port"].to_i
 	else
 		server_4 = tcp_server_4
 	end
-	if params["ssl"]
+	if params["ssl"] && params["ipv6"]
 		ctx = OpenSSL::SSL::SSLContext.new
 		ctx.key = OpenSSL::PKey::RSA.new File.read params["ssl-key"]
 		ctx.cert = OpenSSL::X509::Certificate.new File.read params["ssl-cert"]
 		server_6 = OpenSSL::SSL::SSLServer.new(tcp_server_6, ctx)
 	else
 		server_6 = tcp_server_6
+	end
+	if !params["ipv4"] && !params["ipv6"]
+		puts "#{Time.now.ctime.split(" ")[3]} | Server set to listen on no protocols;  stopping"
+		exit
 	end
 	puts "#{Time.now.ctime.split(" ")[3]} | #{$ver}"
 	puts "#{Time.now.ctime.split(" ")[3]} | Server listening on #{
