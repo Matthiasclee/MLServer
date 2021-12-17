@@ -13,6 +13,7 @@ end
 
 server_params = {
 "ssl" => false, #This is not necessary.
-"max-clients" => 10
+"max-clients" => 10,
+"ipv6" => true
 }
 start(server_params)
