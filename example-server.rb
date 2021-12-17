@@ -14,6 +14,8 @@ end
 server_params = {
 "ssl" => false, #This is not necessary.
 "max-clients" => 10,
-"ipv6" => true
+"ipv6" => true,
+"bind-ipv6" => "::1",
+"ipv4" => false
 }
 start(server_params)
