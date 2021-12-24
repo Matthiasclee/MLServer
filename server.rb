@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.4 Ruby"
+$ver = "MLServer 0.3.41 Ruby"
 require "socket"
 require "openssl"
 require "net/http"
@@ -217,7 +217,7 @@ $SSL_PORT = params["ssl-port"].to_i
 					clientHandler(client, params)
 				end
 			end
-		rescue => $error
+		rescue => error
 			begin
 				error(client, 500, error)
 			rescue
