@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.41 Ruby"
+$ver = "MLServer 0.3.42 Ruby"
 require "socket"
 require "openssl"
 require "net/http"
