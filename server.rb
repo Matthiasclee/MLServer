@@ -49,7 +49,7 @@ def error(client, error, errmsg = nil)
 		errmsg = errmsg.to_s
 		puts "#{Time.now.ctime.split(" ")[3]} | ERROR: " + errmsg.to_s
 	else
-		puts "#{Time.now.ctime.split(" ")[3]} | Client had unknown error."
+		puts "#{Time.now.ctime.split(" ")[3]} | Client had error #{error.to_s} with unknown message."
 	end
 	#Convert error code to integer
 	error = error.to_i
@@ -209,6 +209,7 @@ $SSL_PORT = params["ssl-port"].to_i
 					$lfc4 = true
 					clientHandler(client, params)
 				end
+				$serverThread4.report_on_exception = false
 			end
 			if $lfc6 && params["ipv6"]
 				$lfc6 = false
@@ -216,6 +217,7 @@ $SSL_PORT = params["ssl-port"].to_i
 					$lfc6 = true
 					clientHandler(client, params)
 				end
+				$serverThread6.report_on_exception = false
 			end
 		rescue => error
 			begin
