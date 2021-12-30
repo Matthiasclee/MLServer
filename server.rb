@@ -1,36 +1,57 @@
-$ver = "MLServer 0.3.42 Ruby"
+$ver = "MLServer 0.3.3"
+$started_time = Time.now.to_i
+puts "#{Time.now.ctime.split(" ")[3]} | MLServer #{$ver}"
 require "socket"
 require "openssl"
 require "net/http"
 $clients = [] #Array that stores all open clients
 $aacl = true
 #Close client and remove from array
+puts "#{Time.now.ctime.split(" ")[3]} | Checking for assets..."
 if !File.directory?("./.server_assets")
+	print "#{Time.now.ctime.split(" ")[3]} | Creating assets directory... "
 	Dir.mkdir(".server_assets")
+	puts "Done"
 end
 if !File.exists?("./.server_assets/404.html")
+	print "#{Time.now.ctime.split(" ")[3]} | Fetching 404 page... "
 	File.write("./.server_assets/404.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/404.html")))
+	puts "Done"
 end
 if !File.exists?("./.server_assets/500.html")
+	print "#{Time.now.ctime.split(" ")[3]} | Fetching 500 page... "
 	File.write("./.server_assets/500.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/500.html")))
+	puts "Done"
 end
 if !File.exists?("./.server_assets/500_error.html")
+	print "#{Time.now.ctime.split(" ")[3]} | Fetching 500_error page... "
 	File.write("./.server_assets/500_error.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/500_error.html")))
+	puts "Done"
 end
 if !File.exists?("./.server_assets/doc.html")
+	print "#{Time.now.ctime.split(" ")[3]} | Fetching documentation... "
 	File.write("./.server_assets/doc.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/doc.html")))
+	puts "Done"
 end
 if !File.exists?("./.server_assets/error_default.html")
+	print "#{Time.now.ctime.split(" ")[3]} | Fetching default error page... "
 	File.write("./.server_assets/error_default.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/error_default.html")))
+	puts "Done"
 end
 if !File.exists?("./.server_assets/index.html")
+	print "#{Time.now.ctime.split(" ")[3]} | Fetching home page... "
 	File.write("./.server_assets/index.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/index.html")))
+	puts "Done"
 end
 if !File.exists?("./.server_assets/local_debug.rb")
+	print "#{Time.now.ctime.split(" ")[3]} | Fetching local debug code... "
 	File.write("./.server_assets/local_debug.rb", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/local_debug.rb")))
+	puts "Done"
 end
 if !File.exists?("./.server_assets/client_handler.rb")
+	print "#{Time.now.ctime.split(" ")[3]} | Fetching client handler... "
 	File.write("./.server_assets/client_handler.rb", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/client_handler.rb")))
+	puts "Done"
 end
 require "./.server_assets/local_debug.rb"
 require "./.server_assets/client_handler.rb"
@@ -88,76 +109,79 @@ end
 
 
 def start(params = {"host" => "0.0.0.0", "port" => 80})
-#Define all undefined server parameters
-$ip_protocols = []
-enable_ipv6 = true
-if !params["host"] == nil
-	puts "#{Time.now.ctime.split(" ")[3]} | WARN: parameter 'host' has been deprecated and will be removed in future releases. Please use bind-ipv[4, 6] instead."
-end
-if params["bind-ipv4"] == nil && params["host"] != nil
-	params["bind-ipv4"] = params["host"]
-end
-if params["bind-ipv4"] == nil
-	params["bind-ipv4"] = "0.0.0.0"
-end
-if params["bind-ipv6"] == nil
-	params["bind-ipv6"] = "::"
-end
-if params["max-clients"] == nil
-	params["max-clients"] = -1
-end
-if params["remove-trailing-slash"] == nil
-	params["remove-trailing-slash"] = false
-end
-if params["always-add-content-length"] == nil
-	params["always-add-content-length"] = false
-end
-if params["ssl"] == nil
-	params["ssl"] = false
-end
-if params["ssl-key"] == nil && params["ssl"] == true
-	puts "#{Time.now.ctime.split(" ")[3]} | ERROR: SSL key not provided; starting server without ssl"
-	params["ssl"] = false
-end
-if params["ssl-cert"] == nil && params["ssl"] == true
-	puts "#{Time.now.ctime.split(" ")[3]} | ERROR: SSL cert not provided; starting server without ssl"
-	params["ssl"] = false
-end
-if params["port"] == nil
-	if params["ssl"]
-		params["port"] = 443
-	else
-		params["port"] = 80
+	#Define all undefined server parameters
+	$ip_protocols = []
+	enable_ipv6 = true
+	if !params["host"] == nil
+		puts "#{Time.now.ctime.split(" ")[3]} | WARN: parameter 'host' has been deprecated and will be removed in future releases. Please use bind-ipv[4, 6] instead."
 	end
-end
-if params["ipv6"] == nil
-	params["ipv6"] = false
-end
-if params["ipv4"] == nil
-	params["ipv4"] = true
-end
-domainmatch = /^((([0-9a-zA-Z-]{1,63}\.)+[0-9a-zA-Z-]{2,63})|localhost)$/
-ipv4match = /^([0-2])?([0-5])?[0-5]\.([0-2])?([0-5])?[0-5]\.([0-2])?([0-5])?[0-5]\.([0-2])?([0-5])?[0-5]$/
-ipv6match = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/
-if !params["bind-ipv4"].match(ipv4match) && !params["bind-ipv4"].match(domainmatch)
-	params["ipv4"] = false
-	puts "#{Time.now.ctime.split(" ")[3]} | IPv4 address invalid, starting without ipv4"
-end
-if !params["bind-ipv6"].match(ipv6match) && !params["bind-ipv6"].match(domainmatch)
-	params["ipv6"] = false
-	puts "#{Time.now.ctime.split(" ")[3]} | IPv6 address invalid, starting without ipv6"
-end
+	if params["bind-ipv4"] == nil && params["host"] != nil
+		params["bind-ipv4"] = params["host"]
+	end
+	if params["bind-ipv4"] == nil
+		params["bind-ipv4"] = "0.0.0.0"
+	end
+	if params["bind-ipv6"] == nil
+		params["bind-ipv6"] = "::"
+	end
+	if params["max-clients"] == nil
+		params["max-clients"] = -1
+	end
+	if params["remove-trailing-slash"] == nil
+		params["remove-trailing-slash"] = false
+	end
+	if params["always-add-content-length"] == nil
+		params["always-add-content-length"] = false
+	end
+	if params["ssl"] == nil
+		params["ssl"] = false
+	end
+	if params["ssl-key"] == nil && params["ssl"] == true
+		puts "#{Time.now.ctime.split(" ")[3]} | ERROR: SSL key not provided; starting server without ssl"
+		raise "MLServer::SSL_LOAD_ERR"
+		params["ssl"] = false
+	end
+	if params["ssl-cert"] == nil && params["ssl"] == true
+		puts "#{Time.now.ctime.split(" ")[3]} | ERROR: SSL cert not provided; starting server without ssl"
+		raise "MLServer::SSL_LOAD_ERR"
+		params["ssl"] = false
+	end
+	if params["port"] == nil
+		if params["ssl"]
+			params["port"] = 443
+		else
+			params["port"] = 80
+		end
+	end
+	if params["ipv6"] == nil
+		params["ipv6"] = false
+	end
+	if params["ipv4"] == nil
+		params["ipv4"] = true
+	end
+	domainmatch = /^((([0-9a-zA-Z-]{1,63}\.)+[0-9a-zA-Z-]{2,63})|localhost)$/
+	ipv4match = /^([0-2])?([0-5])?[0-5]\.([0-2])?([0-5])?[0-5]\.([0-2])?([0-5])?[0-5]\.([0-2])?([0-5])?[0-5]$/
+	ipv6match = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/
+	if !params["bind-ipv4"].match(ipv4match) && !params["bind-ipv4"].match(domainmatch)
+		params["ipv4"] = false
+		puts "#{Time.now.ctime.split(" ")[3]} | IPv4 address invalid, starting without ipv4"
+	end
+	if !params["bind-ipv6"].match(ipv6match) && !params["bind-ipv6"].match(domainmatch)
+		params["ipv6"] = false
+		puts "#{Time.now.ctime.split(" ")[3]} | IPv6 address invalid, starting without ipv6"
+	end
 
-$aacl = params["always-add-content-length"]
+	$aacl = params["always-add-content-length"]
 
-params["host"] = params["host"].to_s
-params["port"] = params["port"].to_i
-$HOST_4 = params["bind-ipv4"]
-$HOST_6 = params["bind-ipv6"]
-$PORT = params["port"].to_i
-$SSL_PORT = params["ssl-port"].to_i
+	params["host"] = params["host"].to_s
+	params["port"] = params["port"].to_i
+	$HOST_4 = params["bind-ipv4"]
+	$HOST_6 = params["bind-ipv6"]
+	$PORT = params["port"].to_i
+	$SSL_PORT = params["ssl-port"].to_i
 
 #Start the server
+	puts "#{Time.now.ctime.split(" ")[3]} | Starting the server..."
 	if params["ipv4"]
 		tcp_server_4 = TCPServer.new($HOST_4, $PORT)
 	end
@@ -185,7 +209,7 @@ $SSL_PORT = params["ssl-port"].to_i
 		puts "#{Time.now.ctime.split(" ")[3]} | Server set to listen on no protocols;  stopping"
 		exit
 	end
-	puts "#{Time.now.ctime.split(" ")[3]} | #{$ver}"
+	puts "#{Time.now.ctime.split(" ")[3]} | SSL Mode: #{params["ssl"].to_s}"
 	puts "#{Time.now.ctime.split(" ")[3]} | Server listening on #{
 		if params["ipv4"] && params["ipv6"]
 			"#{$HOST_4}:#{$PORT.to_s} and [#{$HOST_6}]:#{$PORT.to_s}"
@@ -197,7 +221,7 @@ $SSL_PORT = params["ssl-port"].to_i
 			"nothing"
 		end
 	}"
-	puts "#{Time.now.ctime.split(" ")[3]} | SSL Mode: #{params["ssl"].to_s}"
+	puts "#{Time.now.ctime.split(" ")[3]} | Completed in #{(Time.now.to_i - $started_time).to_s} seconds."
 	main
 	$lfc4 = true
 	$lfc6 = true
@@ -219,11 +243,14 @@ $SSL_PORT = params["ssl-port"].to_i
 				end
 				$serverThread6.report_on_exception = false
 			end
+		rescue OpenSSL::SSL::SSLError
+			puts "#{Time.now.ctime.split(" ")[3]} | Client had SSL error."
 		rescue => error
 			begin
 				error(client, 500, error)
 			rescue
-				puts "#{Time.now.ctime.split(" ")[3]} | Unknown client closed. Possibly tried to connect to ssl server without ssl?"
+				puts "#{Time.now.ctime.split(" ")[3]} | Client had fatal error. Server is stopping."
+				exit
 			end
 		end
 	end
