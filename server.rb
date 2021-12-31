@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.3"
+$ver = "MLServer 0.3.31"
 $started_time = Time.now.to_i
 puts "#{Time.now.ctime.split(" ")[3]} | MLServer #{$ver}"
 require "socket"
@@ -6,7 +6,9 @@ require "openssl"
 require "net/http"
 $clients = [] #Array that stores all open clients
 $aacl = true
-#Close client and remove from array
+if "#{eval Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb")).split("\n")[0].sub("$", "new_")}" != $ver
+	puts "#{Time.now.ctime.split(" ")[3]} | A new version of MLServer is available (#{eval Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb")).split("\n")[0].sub("$", "new_")})"
+end
 puts "#{Time.now.ctime.split(" ")[3]} | Checking for assets..."
 if !File.directory?("./.server_assets")
 	print "#{Time.now.ctime.split(" ")[3]} | Creating assets directory... "
@@ -55,6 +57,7 @@ if !File.exists?("./.server_assets/client_handler.rb")
 end
 require "./.server_assets/local_debug.rb"
 require "./.server_assets/client_handler.rb"
+#Close client and remove from array
 def close(client)
 	$clients.delete(client)
 	begin
@@ -221,7 +224,8 @@ def start(params = {"host" => "0.0.0.0", "port" => 80})
 			"nothing"
 		end
 	}"
-	puts "#{Time.now.ctime.split(" ")[3]} | Completed in #{(Time.now.to_i - $started_time).to_s} seconds."
+	time = (Time.now.to_i - $started_time)
+	puts "#{Time.now.ctime.split(" ")[3]} | Completed in #{time.to_s} second#{"s" if time != 1}."
 	main
 	$lfc4 = true
 	$lfc6 = true
