@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.44"
+$ver = "MLServer 0.3.441"
 $SRV_SETTINGS = {} if !defined?($SRV_SETTINGS)
 $SRV_SETTINGS = {
 		:check_for_assets => true,
@@ -179,6 +179,9 @@ def start(params = {"host" => "0.0.0.0", "port" => 80})
 	end
 	if params["ssl"] == nil
 		params["ssl"] = false
+	elsif params["ssl"]
+		
+		puts "#{Time.now.ctime.split(" ")[3]} | WARN: SSL is not fully supported yet, do not deploy with SSL."
 	end
 	if params["ssl-key"] == nil && params["ssl"] == true
 		puts "#{Time.now.ctime.split(" ")[3]} | ERROR: SSL key not provided; starting server without ssl"
