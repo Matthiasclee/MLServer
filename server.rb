@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.43"
+$ver = "MLServer 0.3.431"
 $SRV_SETTINGS = {} if !defined?($SRV_SETTINGS)
 $SRV_SETTINGS = {
 		:check_for_assets => true,
@@ -110,7 +110,7 @@ def error(client, error, errmsg = nil)
 		errmsg = errmsg.to_s
 		puts "#{Time.now.ctime.split(" ")[3]} | ERROR: " + errmsg.to_s
 	else
-		puts "#{Time.now.ctime.split(" ")[3]} | Client had error #{error.to_s} with unknown message."
+		puts "#{Time.now.ctime.split(" ")[3]} | Client had error #{error.to_s} with no."
 	end
 	#Convert error code to integer
 	error = error.to_i
