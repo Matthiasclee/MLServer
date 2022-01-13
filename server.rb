@@ -1,5 +1,5 @@
+$ver = "MLServer 0.3.012"
 begin
-$ver = "MLServer 0.3.011"
 $started_time = Time.now.to_i
 puts "#{Time.now.ctime.split(" ")[3]} | MLServer #{$ver}"
 require "socket"
