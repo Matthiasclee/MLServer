@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.432"
+$ver = "MLServer 0.3.44"
 $SRV_SETTINGS = {} if !defined?($SRV_SETTINGS)
 $SRV_SETTINGS = {
 		:check_for_assets => true,
@@ -110,18 +110,18 @@ def error(client, error, errmsg = nil)
 		errmsg = errmsg.to_s
 		puts "#{Time.now.ctime.split(" ")[3]} | ERROR: " + errmsg.to_s
 	else
-		puts "#{Time.now.ctime.split(" ")[3]} | Client had error #{error.to_s} with no."
+		puts "#{Time.now.ctime.split(" ")[3]} | Client had error #{error.to_s} with no error message provided."
 	end
 	#Convert error code to integer
 	error = error.to_i
 	if error == 404
-		response(client, 404, ["content-type: text/html"], File.read("./.server_assets/404.html"))
+		response(client, 404, ["content-type: text/html"], File.read("./.server_assets/HTML/404.html"))
 	elsif error == 500 && errmsg
-		response(client, 500, ["content-type: text/html"], File.read("./.server_assets/500_error.html").gsub("<ERR>", errmsg))
+		response(client, 500, ["content-type: text/html"], File.read("./.server_assets/HTML/500_error.html").gsub("<ERR>", errmsg))
 	elsif error == 500
-		response(client, 500, ["content-type: text/html"], File.read("./.server_assets/500.html"))
+		response(client, 500, ["content-type: text/html"], File.read("./.server_assets/HTML/500.html"))
 	else
-		response(client, error, ["content-type: text/html"], File.read("./.server_assets/error_default.html").gsub("<ERRORCODE>", error.to_s))
+		response(client, error, ["content-type: text/html"], File.read("./.server_assets/HTML/error_default.html").gsub("<ERRORCODE>", error.to_s))
 	end
 
 end
