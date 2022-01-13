@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.42"
+$ver = "MLServer 0.3.43"
 $SRV_SETTINGS = {} if !defined?($SRV_SETTINGS)
 $SRV_SETTINGS = {
 		:check_for_assets => true,
@@ -267,7 +267,7 @@ def start(params = {"host" => "0.0.0.0", "port" => 80})
 	}"
 	time = (Time.now.to_i - $started_time)
 	puts "#{Time.now.ctime.split(" ")[3]} | Completed in #{time.to_s} second#{"s" if time != 1}."
-	if defined?(main)
+	if defined?(main) #legacy program support
 		puts "#{Time.now.ctime.split(" ")[3]} | Using main() to house your program code is deprecated. If main() is defined for other reasons, ignore this message."
 		main
 	end
