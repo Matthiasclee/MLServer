@@ -46,6 +46,11 @@ if $SRV_SETTINGS[:check_for_assets]
 		Dir.mkdir(".server_assets/HTML")
 		puts "Done"
 	end
+	if !File.directory?("./.server_assets/server_code")
+		print "#{Time.now.ctime.split(" ")[3]} | Creating server code directory... "
+		Dir.mkdir(".server_assets/server_code")
+		puts "Done"
+	end
 	if !File.exists?("./.server_assets/HTML/404.html")
 		print "#{Time.now.ctime.split(" ")[3]} | Fetching 404 page... "
 		File.write("./.server_assets/HTML/404.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/HTML/404.html")))
