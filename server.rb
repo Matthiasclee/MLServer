@@ -1,3 +1,4 @@
+begin
 $ver = "MLServer 0.3.01"
 $started_time = Time.now.to_i
 puts "#{Time.now.ctime.split(" ")[3]} | MLServer #{$ver}"
@@ -109,7 +110,10 @@ end
 def redirect(client, destination = "/")
 	response(client, 302, ["Content-Type: text/html", "Location: #{destination.to_s}"], "Redirecting...")
 end
-
+rescue Interrupt
+	puts "\nExiting"
+	exit
+end
 
 def start(params = {"host" => "0.0.0.0", "port" => 80})
 	#Define all undefined server parameters
@@ -250,6 +254,9 @@ def start(params = {"host" => "0.0.0.0", "port" => 80})
 			end
 		rescue OpenSSL::SSL::SSLError
 			puts "#{Time.now.ctime.split(" ")[3]} | Client had SSL error."
+		rescue Interrupt
+			puts "\nExiting"
+			exit
 		rescue => error
 			begin
 				error(client, 500, error)
