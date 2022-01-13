@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.431"
+$ver = "MLServer 0.3.432"
 $SRV_SETTINGS = {} if !defined?($SRV_SETTINGS)
 $SRV_SETTINGS = {
 		:check_for_assets => true,
