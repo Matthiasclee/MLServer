@@ -71,7 +71,7 @@ def clientHandler(client, params)
 				for x in get_params do
 					gp_final[x.split("=")[0]] = x.split("=")[1]
 				end
-				data = {"request" => req, "headers" => $headers, "remote_ip" => remote_ip, "remote_port" => remote_port, "remote_hostname" => remote_hostname, "path" => path.split("?")[0], "get_params" => gp_final, "method" => type, "data" => data, "cookies" => cookies}
+				data = {"request" => req, "headers" => $headers, "remote_ip" => remote_ip, "path" => path.split("?")[0], "get_params" => gp_final, "method" => type, "data" => data, "cookies" => cookies}
 				if path.split("/")[1] == "__" && remote_ip == "127.0.0.1"
 					begin
 						path_debug(client, data)
