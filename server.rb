@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.41"
+$ver = "MLServer 0.3.42"
 $SRV_SETTINGS = {} if !defined?($SRV_SETTINGS)
 $SRV_SETTINGS = {
 		:check_for_assets => true,
@@ -76,19 +76,19 @@ if $SRV_SETTINGS[:check_for_assets]
 		File.write("./.server_assets/HTML/index.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/HTML/index.html")))
 		puts "Done"
 	end
-	if !File.exists?("./.server_assets/local_debug.rb")
+	if !File.exists?("./.server_assets/server_code/local_debug.rb")
 		print "#{Time.now.ctime.split(" ")[3]} | Fetching local debug code... "
-		File.write("./.server_assets/local_debug.rb", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/local_debug.rb")))
+		File.write("./.server_assets/server_code/local_debug.rb", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/server_code/local_debug.rb")))
 		puts "Done"
 	end
-	if !File.exists?("./.server_assets/client_handler.rb")
+	if !File.exists?("./.server_assets/server_code/client_handler.rb")
 		print "#{Time.now.ctime.split(" ")[3]} | Fetching client handler... "
-		File.write("./.server_assets/client_handler.rb", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/client_handler.rb")))
+		File.write("./.server_assets/server_code/client_handler.rb", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/server_code/client_handler.rb")))
 		puts "Done"
 	end
 end
-require "./.server_assets/local_debug.rb"
-require "./.server_assets/client_handler.rb"
+require "./.server_assets/server_code/local_debug.rb"
+require "./.server_assets/server_code/client_handler.rb"
 #Close client and remove from array
 def close(client)
 	$clients.delete(client)
