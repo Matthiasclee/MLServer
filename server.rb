@@ -267,7 +267,10 @@ def start(params = {"host" => "0.0.0.0", "port" => 80})
 	}"
 	time = (Time.now.to_i - $started_time)
 	puts "#{Time.now.ctime.split(" ")[3]} | Completed in #{time.to_s} second#{"s" if time != 1}."
-	main
+	if defined?(main)
+		puts "#{Time.now.ctime.split(" ")[3]} | Using main() to house your program code is deprecated. If main() is defined for other reasons, ignore this message."
+		main
+	end
 	$lfc4 = true
 	$lfc6 = true
 	loop do
