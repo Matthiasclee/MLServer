@@ -1,11 +1,12 @@
-$ver = "MLServer 0.3.5"
+$ver = "MLServer 0.3.6"
 $SRV_SETTINGS = {} if !defined?($SRV_SETTINGS)
 $SRV_SETTINGS = {
 		:check_for_assets => true,
 		:auto_get_new_versions => false,
 		:auto_confirm_overwrite => false,
 		:warn_if_server_code_not_compatible => true,
-		:exit_if_server_code_not_compatible => true
+		:exit_if_server_code_not_compatible => true,
+		:enable_fw => false
 }.merge($SRV_SETTINGS)
 begin
 $started_time = Time.now.to_i
@@ -53,45 +54,18 @@ if $SRV_SETTINGS[:check_for_assets]
 		Dir.mkdir(".server_assets/server_code")
 		puts "Done"
 	end
-	if !File.exists?("./.server_assets/HTML/404.html")
-		print "#{Time.now.ctime.split(" ")[3]} | Fetching 404 page... "
-		File.write("./.server_assets/HTML/404.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/HTML/404.html")))
+	if !File.exists?("./.server_assets/server_assets.txt")
+		print "#{Time.now.ctime.split(" ")[3]} | Fetching server assets list... "
+		File.write("./.server_assets/server_assets.txt", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/server_assets.txt")))
 		puts "Done"
 	end
-	if !File.exists?("./.server_assets/HTML/500.html")
-		print "#{Time.now.ctime.split(" ")[3]} | Fetching 500 page... "
-		File.write("./.server_assets/HTML/500.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/HTML/500.html")))
-		puts "Done"
-	end
-	if !File.exists?("./.server_assets/HTML/500_error.html")
-		print "#{Time.now.ctime.split(" ")[3]} | Fetching 500_error page... "
-		File.write("./.server_assets/HTML/500_error.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/HTML/500_error.html")))
-		puts "Done"
-	end
-	if !File.exists?("./.server_assets/HTML/doc.html")
-		print "#{Time.now.ctime.split(" ")[3]} | Fetching documentation... "
-		File.write("./.server_assets/HTML/doc.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/HTML/doc.html")))
-		puts "Done"
-	end
-	if !File.exists?("./.server_assets/HTML/error_default.html")
-		print "#{Time.now.ctime.split(" ")[3]} | Fetching default error page... "
-		File.write("./.server_assets/HTML/error_default.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/HTML/error_default.html")))
-		puts "Done"
-	end
-	if !File.exists?("./.server_assets/HTML/index.html")
-		print "#{Time.now.ctime.split(" ")[3]} | Fetching home page... "
-		File.write("./.server_assets/HTML/index.html", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/HTML/index.html")))
-		puts "Done"
-	end
-	if !File.exists?("./.server_assets/server_code/local_debug.rb")
-		print "#{Time.now.ctime.split(" ")[3]} | Fetching local debug code... "
-		File.write("./.server_assets/server_code/local_debug.rb", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/server_code/local_debug.rb")))
-		puts "Done"
-	end
-	if !File.exists?("./.server_assets/server_code/client_handler.rb")
-		print "#{Time.now.ctime.split(" ")[3]} | Fetching client handler... "
-		File.write("./.server_assets/server_code/client_handler.rb", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/server_code/client_handler.rb")))
-		puts "Done"
+	for asset in File.read("./.server_assets/server_assets.txt").split("\n") do
+		asset = asset.split("|")
+		if !File.exist?(asset[0])
+			print "#{Time.now.ctime.split(" ")[3]} | Fetching #{asset[1]}... "
+			File.write(asset[0], Net::HTTP.get(URI.parse(asset[2])))
+			puts "Done"
+		end
 	end
 end
 require "./.server_assets/server_code/local_debug.rb"
