@@ -1,3 +1,6 @@
+$AG_COMPAT_VER_0 = "x"
+$AG_COMPAT_VER_1 = "x"
+$AG_COMPAT_VER_2 = "x"
 class Arg
 	def initialize(argv, prefix = "--")
 		@args = {}

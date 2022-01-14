@@ -1,4 +1,7 @@
-$ver = "MLServer 0.3.61"
+$ver = "MLServer 0.3.611"
+$ver_1 = $ver.split(" ")[1].split(".")[0]
+$ver_2 = $ver.split(" ")[1].split(".")[1]
+$ver_3 = $ver.split(" ")[1].split(".")[2]
 $SRV_SETTINGS = {} if !defined?($SRV_SETTINGS)
 $SRV_SETTINGS = {
 		:check_for_assets => true,
@@ -88,11 +91,23 @@ if $SRV_SETTINGS[:server_settings_from_argv]
 	$SRV_SETTINGS = $SRV_SETTINGS.merge(srv_settings_from_args)
 end
 flagged_to_exit = false
-if !$CH_COMPAT_VER.include?($ver) && $SRV_SETTINGS[:warn_if_server_code_not_compatible]
+def compat?(srv, addon)
+	if srv[0] != addon[0] && addon[0] != "x"
+		return false
+	end
+	if srv[1] != addon[1] && addon[1] != "x"
+		return false
+	end
+	if srv[2] != addon[2] && addon[2] != "x"
+		return false
+	end
+	return true
+end
+if !compat?([$ver_1, $ver_2, $ver_3], [$CH_COMPAT_VER_0, $CH_COMPAT_VER_1, $CH_COMPAT_VER_2]) && $SRV_SETTINGS[:warn_if_server_code_not_compatible]
 	puts "#{Time.now.ctime.split(" ")[3]} | WARN: The current client handler is not compatible with the current MLServer version (#{$ver}). Plese update it."
 	flagged_to_exit = true if $SRV_SETTINGS[:exit_if_server_code_not_compatible]
 end
-if !$LD_COMPAT_VER.include?($ver) && $SRV_SETTINGS[:warn_if_server_code_not_compatible]
+if !compat?([$ver_1, $ver_2, $ver_3], [$LD_COMPAT_VER_0, $LD_COMPAT_VER_1, $LD_COMPAT_VER_2]) && $SRV_SETTINGS[:warn_if_server_code_not_compatible]
 	puts "#{Time.now.ctime.split(" ")[3]} | WARN: The current local debug script is not compatible with the current MLServer version (#{$ver}). Plese update it."
 	flagged_to_exit = true if $SRV_SETTINGS[:exit_if_server_code_not_compatible]
 end
