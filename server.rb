@@ -9,7 +9,7 @@ $SRV_SETTINGS = {
 		:auto_confirm_overwrite => false,
 		:warn_if_server_code_not_compatible => true,
 		:exit_if_server_code_not_compatible => true,
-		:enable_fw => false,
+		:enable_fw2 => false,
 		:server_settings_from_argv => false
 }.merge($SRV_SETTINGS)
 begin
@@ -46,6 +46,11 @@ if $SRV_SETTINGS[:check_for_assets]
 	if !File.directory?("./.server_assets")
 		print "#{Time.now.ctime.split(" ")[3]} | Creating assets directory... "
 		Dir.mkdir(".server_assets")
+		puts "Done"
+	end
+	if !File.directory?("./.server_assets/fw2")
+		print "#{Time.now.ctime.split(" ")[3]} | Creating fw2 directory... "
+		Dir.mkdir(".server_assets/fw2")
 		puts "Done"
 	end
 	if !File.directory?("./.server_assets/HTML")
@@ -330,4 +335,7 @@ def start(params = {"host" => "0.0.0.0", "port" => 80})
 			end
 		end
 	end
+end
+if $SRV_SETTINGS[:enable_fw2]
+	require "./.server_assets/fw2/main.rb"
 end
