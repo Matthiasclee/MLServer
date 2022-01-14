@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.612"
+$ver = "MLServer 0.3.4"
 $ver_1 = $ver.split(" ")[1].split(".")[0]
 $ver_2 = $ver.split(" ")[1].split(".")[1]
 $ver_3 = $ver.split(" ")[1].split(".")[2]
@@ -80,6 +80,9 @@ end
 require "./.server_assets/server_code/local_debug.rb"
 require "./.server_assets/server_code/client_handler.rb"
 require "./.server_assets/server_code/args.rb"
+if $SRV_SETTINGS[:enable_fw2]
+	require "./.server_assets/fw2/main.rb"
+end
 args = Arg.new(ARGV).args
 srv_settings_from_args = args
 args.each{
@@ -337,5 +340,5 @@ def start(params = {"host" => "0.0.0.0", "port" => 80})
 	end
 end
 if $SRV_SETTINGS[:enable_fw2]
-	require "./.server_assets/fw2/main.rb"
+	fw2_start()
 end
