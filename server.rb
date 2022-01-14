@@ -1,12 +1,13 @@
-$ver = "MLServer 0.3.6"
+$ver = "MLServer 0.3.61"
 $SRV_SETTINGS = {} if !defined?($SRV_SETTINGS)
 $SRV_SETTINGS = {
 		:check_for_assets => true,
 		:auto_get_new_versions => false,
 		:auto_confirm_overwrite => false,
 		:warn_if_server_code_not_compatible => true,
-		:exit_if_server_code_not_compatible => true,
-		:enable_fw => false
+		:exit_if_server_code_not_compatible => false,
+		:enable_fw => false,
+		:server_settings_from_argv => true
 }.merge($SRV_SETTINGS)
 begin
 $started_time = Time.now.to_i
@@ -70,14 +71,30 @@ if $SRV_SETTINGS[:check_for_assets]
 end
 require "./.server_assets/server_code/local_debug.rb"
 require "./.server_assets/server_code/client_handler.rb"
+require "./.server_assets/server_code/args.rb"
+args = Arg.new(ARGV).args
+srv_settings_from_args = args
+args.each{
+	|arg|
+	if arg[1].class != :sym.class
+		if arg[1].downcase == "true" || arg[1].downcase == "1" || arg[1].downcase == "y" || arg[1].downcase == "t"
+			srv_settings_from_args[arg[0]] = true
+		elsif arg[1].downcase == "false" || arg[1].downcase == "0" || arg[1].downcase == "n" || arg[1].downcase == "f"
+			srv_settings_from_args[arg[0]] = false
+		end
+	end
+}
+if $SRV_SETTINGS[:server_settings_from_argv]
+	$SRV_SETTINGS = $SRV_SETTINGS.merge(srv_settings_from_args)
+end
 flagged_to_exit = false
 if !$CH_COMPAT_VER.include?($ver) && $SRV_SETTINGS[:warn_if_server_code_not_compatible]
 	puts "#{Time.now.ctime.split(" ")[3]} | WARN: The current client handler is not compatible with the current MLServer version (#{$ver}). Plese update it."
-	flagged_to_exit = true if :exit_if_server_code_not_compatible
+	flagged_to_exit = true if $SRV_SETTINGS[:exit_if_server_code_not_compatible]
 end
 if !$LD_COMPAT_VER.include?($ver) && $SRV_SETTINGS[:warn_if_server_code_not_compatible]
 	puts "#{Time.now.ctime.split(" ")[3]} | WARN: The current local debug script is not compatible with the current MLServer version (#{$ver}). Plese update it."
-	flagged_to_exit = true if :exit_if_server_code_not_compatible
+	flagged_to_exit = true if $SRV_SETTINGS[:exit_if_server_code_not_compatible]
 end
 exit if flagged_to_exit
 #Close client and remove from array
