@@ -7,3 +7,4 @@
 ./.server_assets/server_code/local_debug.rb|local debug code|https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/server_code/local_debug.rb
 ./.server_assets/server_code/client_handler.rb|client handler|https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/server_code/client_handler.rb
 ./.server_assets/server_code/args.rb|arguments processor|https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/server_code/args.rb
+./.server_assets/fw2/main.rb|fw2 main|https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/fw2/main.rb
