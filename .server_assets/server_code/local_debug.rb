@@ -1,4 +1,4 @@
-$ld_ver = "0.0.1"
+$LD_COMPAT_VER = ["MLServer 0.3.441", "MLServer 0.3.5"]
 def path_debug(client, data)
 	if data["method"] != "GET"
 		error(client, 405)
