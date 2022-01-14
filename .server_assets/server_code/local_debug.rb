@@ -1,3 +1,4 @@
+$ld_ver = "0.0.1"
 def path_debug(client, data)
 	if data["method"] != "GET"
 		error(client, 405)

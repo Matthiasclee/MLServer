@@ -1,3 +1,4 @@
+$ch_ver = "0.0.1"
 def clientHandler(client, params)
 				remote_port, remote_hostname, remote_ip = client.peeraddr
 				#See if there is room to accept client (-1 max clients sets no limit)
