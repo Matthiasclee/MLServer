@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.611"
+$ver = "MLServer 0.3.612"
 $ver_1 = $ver.split(" ")[1].split(".")[0]
 $ver_2 = $ver.split(" ")[1].split(".")[1]
 $ver_3 = $ver.split(" ")[1].split(".")[2]
@@ -10,7 +10,7 @@ $SRV_SETTINGS = {
 		:warn_if_server_code_not_compatible => true,
 		:exit_if_server_code_not_compatible => true,
 		:enable_fw => false,
-		:server_settings_from_argv => true
+		:server_settings_from_argv => false
 }.merge($SRV_SETTINGS)
 begin
 $started_time = Time.now.to_i
