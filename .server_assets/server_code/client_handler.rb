@@ -1,4 +1,4 @@
-$CH_COMPAT_VER = ["MLServer 0.3.441", "MLServer 0.3.5", "MLServer 0.3.6"]
+$CH_COMPAT_VER = ["MLServer 0.3.441", "MLServer 0.3.5", "MLServer 0.3.6", "MLServer 0.3.1"]
 def clientHandler(client, params)
 				remote_port, remote_hostname, remote_ip = client.peeraddr
 				#See if there is room to accept client (-1 max clients sets no limit)
