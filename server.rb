@@ -8,7 +8,7 @@ $SRV_SETTINGS = {
 		:auto_get_new_versions => false,
 		:auto_confirm_overwrite => false,
 		:warn_if_server_code_not_compatible => true,
-		:exit_if_server_code_not_compatible => false,
+		:exit_if_server_code_not_compatible => true,
 		:enable_fw => false,
 		:server_settings_from_argv => true
 }.merge($SRV_SETTINGS)
@@ -109,6 +109,10 @@ if !compat?([$ver_1, $ver_2, $ver_3], [$CH_COMPAT_VER_0, $CH_COMPAT_VER_1, $CH_C
 end
 if !compat?([$ver_1, $ver_2, $ver_3], [$LD_COMPAT_VER_0, $LD_COMPAT_VER_1, $LD_COMPAT_VER_2]) && $SRV_SETTINGS[:warn_if_server_code_not_compatible]
 	puts "#{Time.now.ctime.split(" ")[3]} | WARN: The current local debug script is not compatible with the current MLServer version (#{$ver}). Plese update it."
+	flagged_to_exit = true if $SRV_SETTINGS[:exit_if_server_code_not_compatible]
+end
+if !compat?([$ver_1, $ver_2, $ver_3], [$AG_COMPAT_VER_0, $AG_COMPAT_VER_1, $AG_COMPAT_VER_2]) && $SRV_SETTINGS[:warn_if_server_code_not_compatible]
+	puts "#{Time.now.ctime.split(" ")[3]} | WARN: The current args parser is not compatible with the current MLServer version (#{$ver}). Plese update it."
 	flagged_to_exit = true if $SRV_SETTINGS[:exit_if_server_code_not_compatible]
 end
 exit if flagged_to_exit
