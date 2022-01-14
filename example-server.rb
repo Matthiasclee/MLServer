@@ -10,8 +10,7 @@ end
 
 
 server_params = {
-"ssl" => false, #This is not necessary.
-"max-clients" => 10,
+"max-clients" => 50,
 "ipv6" => true,
 "bind-ipv6" => "::1",
 "port" => 5555,
