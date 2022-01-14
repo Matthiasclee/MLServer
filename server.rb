@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.4"
+$ver = "MLServer 0.3.7"
 $ver_1 = $ver.split(" ")[1].split(".")[0]
 $ver_2 = $ver.split(" ")[1].split(".")[1]
 $ver_3 = $ver.split(" ")[1].split(".")[2]
