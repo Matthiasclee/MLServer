@@ -1,3 +1,4 @@
+$SRV_STTINGS = {}
 require "./server.rb"
 
 def path(client, data)
