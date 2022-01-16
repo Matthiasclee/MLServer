@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.73"
+$ver = "MLServer 0.3.731"
 $ver_1 = $ver.split(" ")[1].split(".")[0]
 $ver_2 = $ver.split(" ")[1].split(".")[1]
 $ver_3 = $ver.split(" ")[1].split(".")[2]
@@ -101,6 +101,9 @@ args.each{
 		end
 	end
 }
+if args[:no_cli] && __FILE__ == $0
+	exit
+end
 if $SRV_SETTINGS[:server_settings_from_argv]
 	$SRV_SETTINGS = $SRV_SETTINGS.merge(srv_settings_from_args)
 end
