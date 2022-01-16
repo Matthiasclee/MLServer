@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.711"
+$ver = "MLServer 0.3.72"
 $ver_1 = $ver.split(" ")[1].split(".")[0]
 $ver_2 = $ver.split(" ")[1].split(".")[1]
 $ver_3 = $ver.split(" ")[1].split(".")[2]
@@ -12,6 +12,9 @@ $SRV_SETTINGS = {
 		:enable_fw2 => false,
 		:server_settings_from_argv => false
 }.merge($SRV_SETTINGS)
+if ARGV[0] && File.directory?(ARGV[0]) && __FILE__ == $0
+	require ARGV[0] + "/main.rb"
+end
 begin
 $started_time = Time.now.to_i
 puts "#{Time.now.ctime.split(" ")[3]} | MLServer #{$ver}"
