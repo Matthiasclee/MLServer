@@ -239,10 +239,3 @@ If done correctly, your shell output should look like this:
 15:39:55 | Server listening on 0.0.0.0:443
 15:39:55 | Completed in 1 second.
 ```
-
-
-
-
-
-
-
