@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.72"
+$ver = "MLServer 0.3.73"
 $ver_1 = $ver.split(" ")[1].split(".")[0]
 $ver_2 = $ver.split(" ")[1].split(".")[1]
 $ver_3 = $ver.split(" ")[1].split(".")[2]
@@ -12,15 +12,13 @@ $SRV_SETTINGS = {
 		:enable_fw2 => false,
 		:server_settings_from_argv => false
 }.merge($SRV_SETTINGS)
-if ARGV[0] && File.directory?(ARGV[0]) && __FILE__ == $0
-	require ARGV[0] + "/main.rb"
-end
 begin
 $started_time = Time.now.to_i
 puts "#{Time.now.ctime.split(" ")[3]} | MLServer #{$ver}"
 require "socket"
 require "openssl"
 require "net/http"
+require "csv"
 $clients = [] #Array that stores all open clients
 $aacl = true
 if $SRV_SETTINGS[:check_for_assets]
@@ -346,4 +344,9 @@ def start(params = {"host" => "0.0.0.0", "port" => 80})
 			end
 		end
 	end
+end
+if ARGV[0] && File.directory?(ARGV[0]) && __FILE__ == $0
+	require ARGV[0] + "/main.rb"
+elsif __FILE__ == $0
+	require "./.server_assets/server_code/MLServer_cli.rb"
 end

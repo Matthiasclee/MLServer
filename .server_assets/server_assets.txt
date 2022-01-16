@@ -8,3 +8,4 @@
 ./.server_assets/server_code/client_handler.rb|client handler|https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/server_code/client_handler.rb
 ./.server_assets/server_code/args.rb|arguments processor|https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/server_code/args.rb
 ./.server_assets/fw2/main.rb|fw2 main|https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/fw2/main.rb
+./.server_assets/server_code/MLServer_cli.rb|cli|https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/server_code/MLServer_cli.rb
