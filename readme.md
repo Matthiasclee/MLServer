@@ -135,6 +135,29 @@ Your shell output will then look like this:
 
 as the server actually has started. You now can visit [localhost](http://localhost) in your web browser and see ```Hello World!``` in big font.
 
+### MLServer CLI
+If you run ```server.rb``` or whatever file MLServer is saved as, you can use the MLServer CLI. The CLI is limited as of now. It has 4 commands:
+
+```
+exit
+start
+ver
+update_check
+```
+
+#### exit
+The ```exit``` command is used for exiting MLServer CLI.
+
+#### start
+The ```start``` command is used to start the server. 
+It uses ```main.rb``` in whatever directory was passed as the main program.
+
+#### ver
+The ```ver``` command prints the current MLServer version.
+
+#### update_check
+The ```update_check``` command checks for and updates MLServer.
+
 ### Server parameters
 You can start the server with parameters by passing a hash to the ```start()``` function. The supported parameters are as follows:
 

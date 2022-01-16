@@ -1,3 +1,6 @@
+<h1 id="mlserver">MLServer</h1>
+<h2 id="what-is-mlserver-">What is MLServer?</h2>
+<p>MLserver is a simple, easy to use webserver that allows for infinite flexibility</p>
 <h2 id="how-to-install">How to install</h2>
 <p>To use MLServer in your project, start out with downloading the <a href="https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb">main MLServer script</a>. You can either put it in your project folder and include it with <code>require &quot;./server.rb&quot;</code> or add it to a directory in you <code>$LOAD_PATH</code> array. MLServer will download all of its dependencies upon being run for the first time.</p>
 <h2 id="how-to-use-mlserver">How to use MLServer</h2>
@@ -93,6 +96,21 @@ start() #<span class="hljs-built_in">Server</span> will start listening <span cl
 <span class="hljs-number">15</span>:<span class="hljs-number">06</span>:<span class="hljs-number">10</span> | <span class="hljs-type">Server</span> listening on <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>:<span class="hljs-number">80</span>
 <span class="hljs-number">15</span>:<span class="hljs-number">06</span>:<span class="hljs-number">10</span> | <span class="hljs-type">Completed</span> <span class="hljs-built_in">in</span> <span class="hljs-number">0</span> seconds.
 </code></pre><p>as the server actually has started. You now can visit <a href="http://localhost">localhost</a> in your web browser and see <code>Hello World!</code> in big font.</p>
+<h3 id="mlserver-cli">MLServer CLI</h3>
+<p>If you run <code>server.rb</code> or whatever file MLServer is saved as, you can use the MLServer CLI. The CLI is limited as of now. It has 4 commands:</p>
+<pre><code><span class="hljs-keyword">exit</span>
+start
+ver
+update_check
+</code></pre><h4 id="exit">exit</h4>
+<p>The <code>exit</code> command is used for exiting MLServer CLI.</p>
+<h4 id="start">start</h4>
+<p>The <code>start</code> command is used to start the server. 
+It uses <code>main.rb</code> in whatever directory was passed as the main program.</p>
+<h4 id="ver">ver</h4>
+<p>The <code>ver</code> command prints the current MLServer version.</p>
+<h4 id="update_check">update_check</h4>
+<p>The <code>update_check</code> command checks for and updates MLServer.</p>
 <h3 id="server-parameters">Server parameters</h3>
 <p>You can start the server with parameters by passing a hash to the <code>start()</code> function. The supported parameters are as follows:</p>
 <pre><code><span class="hljs-string">"host"</span> =&gt; <span class="hljs-built_in">string</span>
