@@ -1,4 +1,4 @@
-$ver = "MLServer 0.3.71"
+$ver = "MLServer 0.3.711"
 $ver_1 = $ver.split(" ")[1].split(".")[0]
 $ver_2 = $ver.split(" ")[1].split(".")[1]
 $ver_3 = $ver.split(" ")[1].split(".")[2]
@@ -29,16 +29,21 @@ if $SRV_SETTINGS[:check_for_assets]
 			if $SRV_SETTINGS[:auto_confirm_overwrite]
 				puts "#{Time.now.ctime.split(" ")[3]} | auto_confirm_overwrite is on; skipping confirmation"
 			else
-				print "#{Time.now.ctime.split(" ")[3]} | Confirming overwrite of current server file (Y/n) "
+				print "#{Time.now.ctime.split(" ")[3]} | Confirming update of current server file (Y/n) "
 			end
 			if $SRV_SETTINGS[:auto_confirm_overwrite] || gets.chomp.downcase == "y"
 				print "#{Time.now.ctime.split(" ")[3]} | Writing new version... "
-				File.write(__FILE__, newver)
-				puts "Done!"
-				puts "#{Time.now.ctime.split(" ")[3]} | Please restart the program"
+				begin
+					File.write(__FILE__, newver)
+					puts "Done!"
+				rescue
+					puts "Fail"
+					puts "Oops, something went wrong. Please ensure that #{$0} has access to write to #{File.dirname(__FILE__)}"
+				end
+				puts "#{Time.now.ctime.split(" ")[3]} | Updated, please restart the program."
 				exit
 			else
-				puts "#{Time.now.ctime.split(" ")[3]} | Overwrite cancelled"
+				puts "#{Time.now.ctime.split(" ")[3]} | Update cancelled"
 			end
 		end
 	end
