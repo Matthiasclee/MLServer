@@ -75,7 +75,7 @@ def clientHandler(client, params)
 					gp_final[x.split("=")[0]] = x.split("=")[1]
 				end
 				data = {"request" => req, "headers" => $headers, "remote_ip" => remote_ip, "path" => path.split("?")[0], "get_params" => gp_final, "method" => type, "data" => data, "cookies" => cookies}
-				if path.split("/")[1] == "__" && remote_ip == "127.0.0.1"
+				if path.split("/")[1] == "__" && remote_ip == "127.0.0.1" || remote_ip == "::1" || remote_ip == Socket.ip_address_list.detect{|intf| intf.ipv4_private?}.ip_address
 					begin
 						path_debug(client, data)
 					rescue => error
