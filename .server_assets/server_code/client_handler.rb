@@ -1,5 +1,5 @@
 $CH_COMPAT_VER_0 = "0"
-$CH_COMPAT_VER_1 = "3"
+$CH_COMPAT_VER_1 = "x"
 $CH_COMPAT_VER_2 = "x"
 def clientHandler(client, params)
 				remote_port, remote_hostname, remote_ip = client.peeraddr

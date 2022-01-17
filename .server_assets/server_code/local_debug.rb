@@ -1,5 +1,5 @@
 $LD_COMPAT_VER_0 = "0"
-$LD_COMPAT_VER_1 = "3"
+$LD_COMPAT_VER_1 = "x"
 $LD_COMPAT_VER_2 = "x"
 def path_debug(client, data)
 	if data["method"] != "GET"
