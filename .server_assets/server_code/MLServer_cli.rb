@@ -22,27 +22,27 @@ loop do
 		puts $ver
 	elsif command == "update_check"
 		path = "./#{$0}"
-			puts "Fetching latest version"
-			newver = Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb"))
-			if newver != File.read(path)
-				print "A new version is available (#{eval Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb")).split("\n")[0].sub("$", "new_")}) Confirming update (Y/n) "
-				if gets.chomp.downcase == "y"
-					print "Writing new version... "
-					begin
-						File.write(path, newver)
-						puts "Done!"
-					rescue
-						puts "Fail"
-						puts "Oops, something went wrong."
-					end
-					puts "Updated, please restart the program."
-					exit
-				else
-					puts "Update cancelled"
+		puts "Fetching latest version"
+		newver = Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb"))
+		if newver != File.read(path)
+			print "A new version is available (#{eval Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb")).split("\n")[0].sub("$", "new_")}) Confirming update (Y/n) "
+			if gets.chomp.downcase == "y"
+				print "Writing new version... "
+				begin
+					File.write(path, newver)
+					puts "Done!"
+				rescue
+					puts "Fail"
+					puts "Oops, something went wrong."
 				end
+				puts "Updated, please restart the program."
+				exit
 			else
-				puts "You are using the latest version (#{$ver})"
+				puts "Update cancelled"
 			end
+		else
+			puts "You are using the latest version (#{$ver})"
+		end
 	else
 		puts "Invalid command '#{command}'"
 	end
