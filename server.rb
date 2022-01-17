@@ -195,8 +195,7 @@ def start(params = {"host" => "0.0.0.0", "port" => 80})
 	$ip_protocols = []
 	enable_ipv6 = true
 	if !params["host"] == nil
-		puts "#{Time.now.ctime.split(" ")[3]} | WARN: parameter 'host' has been deprecated and will be removed in future releases. Please use bind-ipv[4, 6] instead."
-		params["bind-ipv4"] = params["host"]
+		puts "#{Time.now.ctime.split(" ")[3]} | ERROR: host is not supported anymore. Please use bind-ipv[4, 6] instead."
 	end
 	if params["bind-ipv4"] == nil && params["host"] != nil
 		params["bind-ipv4"] = params["host"]
@@ -308,10 +307,6 @@ def start(params = {"host" => "0.0.0.0", "port" => 80})
 	}"
 	time = (Time.now.to_i - $started_time)
 	puts "#{Time.now.ctime.split(" ")[3]} | Completed in #{time.to_s} second#{"s" if time != 1}."
-	if defined?(main) #legacy program support
-		puts "#{Time.now.ctime.split(" ")[3]} | Using main() to house your program code is deprecated. If main() is defined for other reasons, ignore this message."
-		main
-	end
 	$lfc4 = true
 	$lfc6 = true
 	loop do
