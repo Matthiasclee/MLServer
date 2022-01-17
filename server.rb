@@ -266,7 +266,6 @@ def start(params = {"host" => "0.0.0.0", "port" => 80})
 	$PORT = params["port"].to_i
 	$SSL_PORT = params["ssl-port"].to_i
 
-#Start the server
 	puts "#{Time.now.ctime.split(" ")[3]} | Starting the server..."
 	if params["ipv4"]
 		tcp_server_4 = TCPServer.new($HOST_4, $PORT)
