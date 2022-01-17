@@ -1,7 +1,13 @@
 loop do
 	print "MLServer> "
 	full_command = CSV::parse_line(gets.chomp, col_sep: ' ')
-	command = full_command[0].downcase
+	if full_command && full_command[0]
+		command = full_command[0].downcase
+	elsif full_command && !full_command[0] && full_command[1]
+		command = ""
+	else
+		command = ""
+	end
 	if command == "exit"
 		exit
 	elsif command == "start"
@@ -43,6 +49,7 @@ loop do
 		else
 			puts "You are using the latest version (#{$ver})"
 		end
+	elsif command == ""
 	else
 		puts "Invalid command '#{command}'"
 	end
