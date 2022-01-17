@@ -1,7 +1,7 @@
 # MLServer
 
 ## What is MLServer?
-MLserver is a simple, easy to use webserver that allows for infinite flexibility
+MLserver is a simple, easy to use webserver that allows for infinite flexibility.
 
 ## How to install
 To use MLServer in your project, start out with downloading the [main MLServer script](https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb). You can either put it in your project folder and include it with ```require "./server.rb"``` or add it to a directory in your ```$LOAD_PATH```. MLServer will download all of its dependencies upon being run for the first time.
