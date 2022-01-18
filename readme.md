@@ -135,6 +135,10 @@ Your shell output will then look like this:
 
 as the server actually has started. You now can visit [localhost](http://localhost) in your web browser and see ```Hello World!``` in big font.
 
+### Server homepage
+<!-- I need a better name -->
+MLServer comes with a sort of secret homepage only accessible by visiting ```<server's private IP address>/__```. on the server itself. This "homepage" contains the server documentation, and soon, other info/tools for the server.
+
 ### MLServer CLI
 If you run ```server.rb``` or whatever file MLServer is saved as, you can use the MLServer CLI. The CLI is limited as of now. It has 4 commands:
 
