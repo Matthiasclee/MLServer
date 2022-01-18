@@ -23,7 +23,11 @@ $clients = [] #Array that stores all open clients
 $aacl = true
 if $SRV_SETTINGS[:check_for_assets]
 	if Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb")) != File.read(__FILE__)
-		puts "#{Time.now.ctime.split(" ")[3]} | A new version of MLServer is available (#{eval Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb")).split("\n")[0].sub("$", "new_")})"
+		if (eval Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb")).split("\n")[0].sub("$", "new_")) != $ver
+			puts "#{Time.now.ctime.split(" ")[3]} | A new version of MLServer is available (#{eval Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb")).split("\n")[0].sub("$", "new_")})"
+		else
+			puts "#{Time.now.ctime.split(" ")[3]} | It appears that you are using a non-released version of MLServer."
+		end
 		if $SRV_SETTINGS[:auto_get_new_versions]
 			puts "#{Time.now.ctime.split(" ")[3]} | Fetching new version"
 			newver = Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb"))
