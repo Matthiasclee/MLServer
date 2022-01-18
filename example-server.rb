@@ -12,9 +12,9 @@ end
 
 server_params = {
 "max-clients" => 50,
-"ipv6" => true,
-"bind-ipv6" => "::1",
-"port" => 5555,
-"ipv4" => false
+#"ipv6" => true,
+#"bind-ipv6" => "::1",
+"port" => 5555#,
+#"ipv4" => false
 }
 start(server_params)
