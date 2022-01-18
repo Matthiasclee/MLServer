@@ -4,7 +4,7 @@
 MLserver is a simple, easy to use webserver that allows for infinite flexibility.
 
 ## How to install
-To use MLServer in your project, either download the [current script](https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb), which downloads all of the most recent assets, or download the. [latest release](https://github.com/Matthiasclee/MLServer/releases/latest), which comes with all of the dependencies. You can either put it in your project folder and include it with ```require "./server.rb"``` or add it to a directory in your ```$LOAD_PATH```.
+To use MLServer in your project, either download the [current script](https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb), which will automatically download all of the latest assets, or download the [latest release](https://github.com/Matthiasclee/MLServer/releases/latest), which will come with all of its respective assets. (NOTE: If you are downloading a specific release, make sure to include the ```.server_assets``` folder provided with that release; it may not work with the most recent assets.) You can either put it in your project folder and include it with ```require "./server.rb"``` or add it to a directory in your ```$LOAD_PATH```.
 
 ## How to use MLServer
 Using MLServer is pretty straightforward. When your server receives a request, it calls the ```path()``` function and passes it the client that made the request, and a whole bunch of data that MLServer gathered about the request, including the path, headers, cookies, etc.
