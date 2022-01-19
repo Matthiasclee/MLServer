@@ -145,13 +145,14 @@ as the server actually has started. You now can visit [localhost](http://localho
 MLServer comes with a sort of secret homepage only accessible by visiting ```<server's private IP address>/__```. on the server itself. This "homepage" contains the server documentation, and soon, other info/tools for the server.
 
 ### MLServer CLI
-If you run ```server.rb``` or whatever file MLServer is saved as, you can use the MLServer CLI. The CLI is limited as of now. It has 4 commands:
+If you run ```server.rb``` or whatever file MLServer is saved as, you can use the MLServer CLI. 
 
 ```
 exit
 start
 ver
 update_check
+assets_check
 ```
 
 #### exit
@@ -166,6 +167,9 @@ The ```ver``` command prints the current MLServer version.
 
 #### update_check
 The ```update_check``` command checks for and updates MLServer.
+
+#### assets_check
+The ```assets_check``` command checks for and fetches the MLServer assets.
 
 ### Server parameters
 You can start the server with parameters by passing a hash to the ```start()``` function. The supported parameters are as follows:
