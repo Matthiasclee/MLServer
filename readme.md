@@ -11,4 +11,4 @@ $SRV_SETTINGS = {:check_for_assets => true}
 ```
 That makes MLServer check and see if it has all of its necessary assets. You can either leave it there and check for assets every time you run your program, in case of an accident, or remove it after the first time in order to speed up your program.
 
-The rest of the documentation can be found [here](https://raw.githubusercontent.com/Matthiasclee/MLServer/docs/docs.md).
+The rest of the documentation can be found [here](https://github.com/Matthiasclee/MLServer/blob/main/docs/docs.md).
