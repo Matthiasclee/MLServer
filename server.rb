@@ -14,7 +14,7 @@ $SRV_SETTINGS = {
 }.merge($SRV_SETTINGS)
 begin
 $started_time = Time.now.to_i
-puts "#{Time.now.ctime.split(" ")[3]} | MLServer #{$ver}"
+puts "#{Time.now.ctime.split(" ")[3]} | #{$ver}"
 require "socket"
 require "openssl"
 require "net/http"
@@ -90,9 +90,8 @@ end
 require "./.server_assets/server_code/local_debug.rb"
 require "./.server_assets/server_code/client_handler.rb"
 require "./.server_assets/server_code/args.rb"
-if $SRV_SETTINGS[:enable_fw2]
-	require "./.server_assets/fw2/main.rb"
-end
+require "./.server_assets/fw2/main.rb" if $SRV_SETTINGS[:enable_fw2]
+
 args = Arg.new(ARGV).args
 srv_settings_from_args = args
 args.each{
@@ -171,13 +170,13 @@ end
 
 #Form and send a response to the client
 def response(client, response = 200, headers = ["Content-Type: text/html"], data = "<h1>No Content Was Provided</h1><br>#{$ver}", aacl = $aacl)
-	headers << "Server: MLServer/0.0.1 (Ruby)"
+	headers << "Server: #{$ver}"
 	client.print "HTTP/1.1 #{response.to_s}\r\n"
 	headers_s = ""
 	for h in headers do
 		headers_s = headers_s + h + "\r\n"
 	end
-	if aacl && !headers_s.downcase.include?("Content-Length: ")
+	if aacl && !headers_s.downcase.include?("content-length:")
 		headers_s = headers_s + "Content-Length: #{data.length.to_s}\n"
 	end
 	client.print "#{headers_s}\r\n"
@@ -198,12 +197,6 @@ def start(params = {"host" => "0.0.0.0", "port" => 80})
 	#Define all undefined server parameters
 	$ip_protocols = []
 	enable_ipv6 = true
-	if !params["host"] == nil
-		puts "#{Time.now.ctime.split(" ")[3]} | ERROR: host is not supported anymore. Please use bind-ipv[4, 6] instead."
-	end
-	if params["bind-ipv4"] == nil && params["host"] != nil
-		params["bind-ipv4"] = params["host"]
-	end
 	if params["bind-ipv4"] == nil
 		params["bind-ipv4"] = "0.0.0.0"
 	end
@@ -227,12 +220,10 @@ def start(params = {"host" => "0.0.0.0", "port" => 80})
 	end
 	if params["ssl-key"] == nil && params["ssl"] == true
 		puts "#{Time.now.ctime.split(" ")[3]} | ERROR: SSL key not provided; starting server without ssl"
-		raise "MLServer::SSL_LOAD_ERR"
 		params["ssl"] = false
 	end
 	if params["ssl-cert"] == nil && params["ssl"] == true
 		puts "#{Time.now.ctime.split(" ")[3]} | ERROR: SSL cert not provided; starting server without ssl"
-		raise "MLServer::SSL_LOAD_ERR"
 		params["ssl"] = false
 	end
 	if params["port"] == nil

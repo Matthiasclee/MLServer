@@ -130,7 +130,7 @@ start() #Server will start listening for requests
 Your shell output will then look like this:
 
 ```
-15:06:10 | MLServer MLServer 0.3.432
+15:06:10 | MLServer 0.3.731
 15:06:10 | Checking for assets...
 15:06:10 | Starting the server...
 15:06:10 | SSL Mode: false
