@@ -75,7 +75,7 @@ begin
 		end
 		if !File.exists?("./server_assets/server_assets.txt")
 			print "#{Time.now.ctime.split(" ")[3]} | Fetching server assets list... "
-			File.write("./server_assets/server_assets.txt", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/server_assets.txt")))
+			File.write("./server_assets/server_assets.txt", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server_assets/server_assets.txt")))
 			puts "Done"
 		end
 		for asset in File.read("./server_assets/server_assets.txt").split("\n") do
