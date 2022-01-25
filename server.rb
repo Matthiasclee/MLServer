@@ -13,181 +13,181 @@ $SRV_SETTINGS = {
 		:server_settings_from_argv => false
 }.merge($SRV_SETTINGS)
 begin
-$started_time = Time.now.to_i
-puts "#{Time.now.ctime.split(" ")[3]} | #{$ver}"
-require "socket"
-require "openssl"
-require "net/http"
-require "csv"
-$clients = [] #Array that stores all open clients
-$aacl = true
-if $SRV_SETTINGS[:check_for_assets]
-	if Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb")) != File.read(__FILE__)
-		if (eval Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb")).split("\n")[0].sub("$", "new_")) != $ver
-			puts "#{Time.now.ctime.split(" ")[3]} | A new version of MLServer is available (#{eval Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb")).split("\n")[0].sub("$", "new_")})"
-		else
-			puts "#{Time.now.ctime.split(" ")[3]} | It appears that you are using a non-released version of MLServer."
-		end
-		if $SRV_SETTINGS[:auto_get_new_versions]
-			puts "#{Time.now.ctime.split(" ")[3]} | Fetching new version"
-			newver = Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb"))
-			if $SRV_SETTINGS[:auto_confirm_overwrite]
-				puts "#{Time.now.ctime.split(" ")[3]} | auto_confirm_overwrite is on; skipping confirmation"
+	$started_time = Time.now.to_i
+	puts "#{Time.now.ctime.split(" ")[3]} | #{$ver}"
+	require "socket"
+	require "openssl"
+	require "net/http"
+	require "csv"
+	$clients = [] #Array that stores all open clients
+	$aacl = true
+	if $SRV_SETTINGS[:check_for_assets]
+		if Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb")) != File.read(__FILE__)
+			if (eval Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb")).split("\n")[0].sub("$", "new_")) != $ver
+				puts "#{Time.now.ctime.split(" ")[3]} | A new version of MLServer is available (#{eval Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb")).split("\n")[0].sub("$", "new_")})"
 			else
-				print "#{Time.now.ctime.split(" ")[3]} | Confirming update of current server file (Y/n) "
+				puts "#{Time.now.ctime.split(" ")[3]} | It appears that you are using a non-released version of MLServer."
 			end
-			if $SRV_SETTINGS[:auto_confirm_overwrite] || gets.chomp.downcase == "y"
-				print "#{Time.now.ctime.split(" ")[3]} | Writing new version... "
-				begin
-					File.write(__FILE__, newver)
-					puts "Done!"
-				rescue
-					puts "Fail"
-					puts "Oops, something went wrong. Please ensure that #{$0} has access to write to #{File.dirname(__FILE__)}"
+			if $SRV_SETTINGS[:auto_get_new_versions]
+				puts "#{Time.now.ctime.split(" ")[3]} | Fetching new version"
+				newver = Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb"))
+				if $SRV_SETTINGS[:auto_confirm_overwrite]
+					puts "#{Time.now.ctime.split(" ")[3]} | auto_confirm_overwrite is on; skipping confirmation"
+				else
+					print "#{Time.now.ctime.split(" ")[3]} | Confirming update of current server file (Y/n) "
 				end
-				puts "#{Time.now.ctime.split(" ")[3]} | Updated, please restart the program."
-				exit
-			else
-				puts "#{Time.now.ctime.split(" ")[3]} | Update cancelled"
+				if $SRV_SETTINGS[:auto_confirm_overwrite] || gets.chomp.downcase == "y"
+					print "#{Time.now.ctime.split(" ")[3]} | Writing new version... "
+					begin
+						File.write(__FILE__, newver)
+						puts "Done!"
+					rescue
+						puts "Fail"
+						puts "Oops, something went wrong. Please ensure that #{$0} has access to write to #{File.dirname(__FILE__)}"
+					end
+					puts "#{Time.now.ctime.split(" ")[3]} | Updated, please restart the program."
+					exit
+				else
+					puts "#{Time.now.ctime.split(" ")[3]} | Update cancelled"
+				end
 			end
 		end
-	end
-	puts "#{Time.now.ctime.split(" ")[3]} | Checking for assets..."
-	if !File.directory?("./.server_assets")
-		print "#{Time.now.ctime.split(" ")[3]} | Creating assets directory... "
-		Dir.mkdir(".server_assets")
-		puts "Done"
-	end
-	if !File.directory?("./.server_assets/fw2")
-		print "#{Time.now.ctime.split(" ")[3]} | Creating fw2 directory... "
-		Dir.mkdir(".server_assets/fw2")
-		puts "Done"
-	end
-	if !File.directory?("./.server_assets/HTML")
-		print "#{Time.now.ctime.split(" ")[3]} | Creating HTML directory... "
-		Dir.mkdir(".server_assets/HTML")
-		puts "Done"
-	end
-	if !File.directory?("./.server_assets/server_code")
-		print "#{Time.now.ctime.split(" ")[3]} | Creating server code directory... "
-		Dir.mkdir(".server_assets/server_code")
-		puts "Done"
-	end
-	if !File.exists?("./.server_assets/server_assets.txt")
-		print "#{Time.now.ctime.split(" ")[3]} | Fetching server assets list... "
-		File.write("./.server_assets/server_assets.txt", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/server_assets.txt")))
-		puts "Done"
-	end
-	for asset in File.read("./.server_assets/server_assets.txt").split("\n") do
-		asset = asset.split("|")
-		if !File.exist?(asset[0])
-			print "#{Time.now.ctime.split(" ")[3]} | Fetching #{asset[1]}... "
-			File.write(asset[0], Net::HTTP.get(URI.parse(asset[2])))
+		puts "#{Time.now.ctime.split(" ")[3]} | Checking for assets..."
+		if !File.directory?("./server_assets")
+			print "#{Time.now.ctime.split(" ")[3]} | Creating assets directory... "
+			Dir.mkdir("server_assets")
 			puts "Done"
 		end
-	end
-end
-require "./.server_assets/server_code/local_debug.rb"
-require "./.server_assets/server_code/client_handler.rb"
-require "./.server_assets/server_code/args.rb"
-require "./.server_assets/fw2/main.rb" if $SRV_SETTINGS[:enable_fw2]
-
-args = Arg.new(ARGV).args
-srv_settings_from_args = args
-args.each{
-	|arg|
-	if arg[1].class != :sym.class
-		if arg[1].downcase == "true" || arg[1].downcase == "1" || arg[1].downcase == "y" || arg[1].downcase == "t"
-			srv_settings_from_args[arg[0]] = true
-		elsif arg[1].downcase == "false" || arg[1].downcase == "0" || arg[1].downcase == "n" || arg[1].downcase == "f"
-			srv_settings_from_args[arg[0]] = false
+		if !File.directory?("./server_assets/fw2")
+			print "#{Time.now.ctime.split(" ")[3]} | Creating fw2 directory... "
+			Dir.mkdir("server_assets/fw2")
+			puts "Done"
+		end
+		if !File.directory?("./server_assets/HTML")
+			print "#{Time.now.ctime.split(" ")[3]} | Creating HTML directory... "
+			Dir.mkdir("server_assets/HTML")
+			puts "Done"
+		end
+		if !File.directory?("./server_assets/server_code")
+			print "#{Time.now.ctime.split(" ")[3]} | Creating server code directory... "
+			Dir.mkdir("server_assets/server_code")
+			puts "Done"
+		end
+		if !File.exists?("./server_assets/server_assets.txt")
+			print "#{Time.now.ctime.split(" ")[3]} | Fetching server assets list... "
+			File.write("./server_assets/server_assets.txt", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/server_assets.txt")))
+			puts "Done"
+		end
+		for asset in File.read("./server_assets/server_assets.txt").split("\n") do
+			asset = asset.split("|")
+			if !File.exist?(asset[0])
+				print "#{Time.now.ctime.split(" ")[3]} | Fetching #{asset[1]}... "
+				File.write(asset[0], Net::HTTP.get(URI.parse(asset[2])))
+				puts "Done"
+			end
 		end
 	end
-}
-if args[:no_cli] && __FILE__ == $0
-	exit
-end
-if $SRV_SETTINGS[:server_settings_from_argv]
-	$SRV_SETTINGS = $SRV_SETTINGS.merge(srv_settings_from_args)
-end
-flagged_to_exit = false
-def compat?(srv, addon)
-	if srv[0] != addon[0] && addon[0] != "x"
-		return false
-	end
-	if srv[1] != addon[1] && addon[1] != "x"
-		return false
-	end
-	if srv[2] != addon[2] && addon[2] != "x"
-		return false
-	end
-	return true
-end
-if !compat?([$ver_1, $ver_2, $ver_3], [$CH_COMPAT_VER_0, $CH_COMPAT_VER_1, $CH_COMPAT_VER_2]) && $SRV_SETTINGS[:warn_if_server_code_not_compatible]
-	puts "#{Time.now.ctime.split(" ")[3]} | WARN: The current client handler is not compatible with the current MLServer version (#{$ver}). Plese update it."
-	flagged_to_exit = true if $SRV_SETTINGS[:exit_if_server_code_not_compatible]
-end
-if !compat?([$ver_1, $ver_2, $ver_3], [$LD_COMPAT_VER_0, $LD_COMPAT_VER_1, $LD_COMPAT_VER_2]) && $SRV_SETTINGS[:warn_if_server_code_not_compatible]
-	puts "#{Time.now.ctime.split(" ")[3]} | WARN: The current local debug script is not compatible with the current MLServer version (#{$ver}). Plese update it."
-	flagged_to_exit = true if $SRV_SETTINGS[:exit_if_server_code_not_compatible]
-end
-if !compat?([$ver_1, $ver_2, $ver_3], [$AG_COMPAT_VER_0, $AG_COMPAT_VER_1, $AG_COMPAT_VER_2]) && $SRV_SETTINGS[:warn_if_server_code_not_compatible]
-	puts "#{Time.now.ctime.split(" ")[3]} | WARN: The current args parser is not compatible with the current MLServer version (#{$ver}). Plese update it."
-	flagged_to_exit = true if $SRV_SETTINGS[:exit_if_server_code_not_compatible]
-end
-exit if flagged_to_exit
-#Close client and remove from array
-def close(client)
-	$clients.delete(client)
-	begin
-		client.close
-	rescue
-	end
-end
+	require "./server_assets/server_code/local_debug.rb"
+	require "./server_assets/server_code/client_handler.rb"
+	require "./server_assets/server_code/args.rb"
+	require "./server_assets/fw2/main.rb" if $SRV_SETTINGS[:enable_fw2]
 
-#Built in error handler
-def error(client, error, errmsg = nil)
-	#If error message is provided, print it
-	if errmsg != nil
-		errmsg = errmsg.to_s
-		puts "#{Time.now.ctime.split(" ")[3]} | ERROR: " + errmsg.to_s
-	else
-		puts "#{Time.now.ctime.split(" ")[3]} | Client had error #{error.to_s} with no error message provided."
+	args = Arg.new(ARGV).args
+	srv_settings_from_args = args
+	args.each{
+		|arg|
+		if arg[1].class != :sym.class
+			if arg[1].downcase == "true" || arg[1].downcase == "1" || arg[1].downcase == "y" || arg[1].downcase == "t"
+				srv_settings_from_args[arg[0]] = true
+			elsif arg[1].downcase == "false" || arg[1].downcase == "0" || arg[1].downcase == "n" || arg[1].downcase == "f"
+				srv_settings_from_args[arg[0]] = false
+			end
+		end
+	}
+	if args[:no_cli] && __FILE__ == $0
+		exit
 	end
-	#Convert error code to integer
-	error = error.to_i
-	if error == 404
-		response(client, 404, ["content-type: text/html"], File.read("./.server_assets/HTML/404.html"))
-	elsif error == 500 && errmsg
-		response(client, 500, ["content-type: text/html"], File.read("./.server_assets/HTML/500_error.html").gsub("<ERR>", errmsg))
-	elsif error == 500
-		response(client, 500, ["content-type: text/html"], File.read("./.server_assets/HTML/500.html"))
-	else
-		response(client, error, ["content-type: text/html"], File.read("./.server_assets/HTML/error_default.html").gsub("<ERRORCODE>", error.to_s))
+	if $SRV_SETTINGS[:server_settings_from_argv]
+		$SRV_SETTINGS = $SRV_SETTINGS.merge(srv_settings_from_args)
+	end
+	flagged_to_exit = false
+	def compat?(srv, addon)
+		if srv[0] != addon[0] && addon[0] != "x"
+			return false
+		end
+		if srv[1] != addon[1] && addon[1] != "x"
+			return false
+		end
+		if srv[2] != addon[2] && addon[2] != "x"
+			return false
+		end
+		return true
+	end
+	if !compat?([$ver_1, $ver_2, $ver_3], [$CH_COMPAT_VER_0, $CH_COMPAT_VER_1, $CH_COMPAT_VER_2]) && $SRV_SETTINGS[:warn_if_server_code_not_compatible]
+		puts "#{Time.now.ctime.split(" ")[3]} | WARN: The current client handler is not compatible with the current MLServer version (#{$ver}). Plese update it."
+		flagged_to_exit = true if $SRV_SETTINGS[:exit_if_server_code_not_compatible]
+	end
+	if !compat?([$ver_1, $ver_2, $ver_3], [$LD_COMPAT_VER_0, $LD_COMPAT_VER_1, $LD_COMPAT_VER_2]) && $SRV_SETTINGS[:warn_if_server_code_not_compatible]
+		puts "#{Time.now.ctime.split(" ")[3]} | WARN: The current local debug script is not compatible with the current MLServer version (#{$ver}). Plese update it."
+		flagged_to_exit = true if $SRV_SETTINGS[:exit_if_server_code_not_compatible]
+	end
+	if !compat?([$ver_1, $ver_2, $ver_3], [$AG_COMPAT_VER_0, $AG_COMPAT_VER_1, $AG_COMPAT_VER_2]) && $SRV_SETTINGS[:warn_if_server_code_not_compatible]
+		puts "#{Time.now.ctime.split(" ")[3]} | WARN: The current args parser is not compatible with the current MLServer version (#{$ver}). Plese update it."
+		flagged_to_exit = true if $SRV_SETTINGS[:exit_if_server_code_not_compatible]
+	end
+	exit if flagged_to_exit
+	#Close client and remove from array
+	def close(client)
+		$clients.delete(client)
+		begin
+			client.close
+		rescue
+		end
 	end
 
-end
+	#Built in error handler
+	def error(client, error, errmsg = nil)
+		#If error message is provided, print it
+		if errmsg != nil
+			errmsg = errmsg.to_s
+			puts "#{Time.now.ctime.split(" ")[3]} | ERROR: " + errmsg.to_s
+		else
+			puts "#{Time.now.ctime.split(" ")[3]} | Client had error #{error.to_s} with no error message provided."
+		end
+		#Convert error code to integer
+		error = error.to_i
+		if error == 404
+			response(client, 404, ["content-type: text/html"], File.read("./server_assets/HTML/404.html"))
+		elsif error == 500 && errmsg
+			response(client, 500, ["content-type: text/html"], File.read("./server_assets/HTML/500_error.html").gsub("<ERR>", errmsg))
+		elsif error == 500
+			response(client, 500, ["content-type: text/html"], File.read("./server_assets/HTML/500.html"))
+		else
+			response(client, error, ["content-type: text/html"], File.read("./server_assets/HTML/error_default.html").gsub("<ERRORCODE>", error.to_s))
+		end
 
-#Form and send a response to the client
-def response(client, response = 200, headers = ["Content-Type: text/html"], data = "<h1>No Content Was Provided</h1><br>#{$ver}", aacl = $aacl)
-	headers << "Server: #{$ver}"
-	client.print "HTTP/1.1 #{response.to_s}\r\n"
-	headers_s = ""
-	for h in headers do
-		headers_s = headers_s + h + "\r\n"
 	end
-	if aacl && !headers_s.downcase.include?("content-length:")
-		headers_s = headers_s + "Content-Length: #{data.length.to_s}\n"
-	end
-	client.print "#{headers_s}\r\n"
-	client.print data.to_s
-	close(client)
-end
 
-#Redirect the client
-def redirect(client, destination = "/")
-	response(client, 302, ["Content-Type: text/html", "Location: #{destination.to_s}"], "Redirecting...")
-end
+	#Form and send a response to the client
+	def response(client, response = 200, headers = ["Content-Type: text/html"], data = "<h1>No Content Was Provided</h1><br>#{$ver}", aacl = $aacl)
+		headers << "Server: #{$ver}"
+		client.print "HTTP/1.1 #{response.to_s}\r\n"
+		headers_s = ""
+		for h in headers do
+			headers_s = headers_s + h + "\r\n"
+		end
+		if aacl && !headers_s.downcase.include?("content-length:")
+			headers_s = headers_s + "Content-Length: #{data.length.to_s}\n"
+		end
+		client.print "#{headers_s}\r\n"
+		client.print data.to_s
+		close(client)
+	end
+
+	#Redirect the client
+	def redirect(client, destination = "/")
+		response(client, 302, ["Content-Type: text/html", "Location: #{destination.to_s}"], "Redirecting...")
+	end
 rescue Interrupt
 	puts "\nExiting"
 	exit
@@ -340,5 +340,5 @@ end
 if ARGV[0] && File.directory?(ARGV[0]) && __FILE__ == $0
 	require ARGV[0] + "/main.rb"
 elsif __FILE__ == $0
-	require "./.server_assets/server_code/MLServer_cli.rb"
+	require "./server_assets/server_code/MLServer_cli.rb"
 end
