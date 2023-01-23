@@ -19,6 +19,7 @@ begin
 	require "openssl"
 	require "net/http"
 	require "csv"
+  require "MLserver"
 	$clients = [] #Array that stores all open clients
 	$aacl = true
 	if $SRV_SETTINGS[:check_for_assets]
@@ -310,7 +311,7 @@ def start(params = {"host" => "0.0.0.0", "port" => 80})
 				$lfc4 = false
 				$serverThread4 = Thread.start(server_4.accept) do |client|
 					$lfc4 = true
-					clientHandler(client, params)
+          x=MLserver::RequestParser.parse_request(client)
 				end
 				$serverThread4.report_on_exception = false
 			end

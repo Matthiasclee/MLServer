@@ -1,6 +1,6 @@
 require_relative "lib/MLserver.rb"
 
-exe=['']
+exe=[]
 
 Gem::Specification.new do |s|
   s.name        = 'mlserver'

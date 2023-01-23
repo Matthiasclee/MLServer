@@ -1,6 +1,6 @@
 module MLserver
   module RequestParser
-    def parse_request(client)
+    def self.parse_request(client)
       keepReading = true
       headers = {}
       data = ""
