@@ -1,7 +1,7 @@
 module MLserver
   class Response
     @@default_headers = {
-      Server: "MLserver #{1}",
+      Server: "MLserver #{MLserver.version}",
       "Content-Type": "text/plain"
     }
 
