@@ -15,7 +15,7 @@ module MLserver
 
       #Get all headers
       while keepReading do
-        x = client.gets
+        x = client.gets.to_s
         if x.chomp.length == 0
           keepReading = false
         else
