@@ -5,4 +5,4 @@ h = MLserver::ClientHandler.new do |request, client|
   client.puts MLserver::Response.new(data: request.path).to_s
 end
 
-MLserver::Server.start(port:5555, handler: h)
+MLserver::Server.start(port:5555, handler: h, logger: MLserver::DefaultLogger)
