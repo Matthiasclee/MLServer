@@ -1,14 +1,14 @@
 module MLserver
   class Response
     @@default_headers = {
-      Server: "MLserver #{::MLserver.version}",
+      Server: "MLserver #{1}",
       "Content-Type": "text/plain"
     }
 
     def initialize(status:200, headers:{}, data:"")
       @status = 200
-      @headers = @@default_headers.merge(response_specific_headers).merge(headers)
       @data = data
+      @headers = @@default_headers.merge(response_specific_headers).merge(headers)
     end
 
     def to_s(array:false)

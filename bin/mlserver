@@ -1,3 +1,4 @@
 #!/usr/bin/env ruby
 
 require "MLserver"
+MLserver::Server.start(port:5555)
