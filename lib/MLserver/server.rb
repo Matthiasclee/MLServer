@@ -5,8 +5,8 @@ module MLserver
 
       loop do
         Thread.start(server.accept) do |client|
-          logger.log "a"
           r=RequestParser.parse_request(client)
+          logger.log "#{client.peeraddr[2]} => #{r.method} #{r.path}"
           handler.run(r, client)
         end
       end
