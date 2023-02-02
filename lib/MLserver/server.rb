@@ -29,6 +29,14 @@ module MLserver
             logger.log "#{client.peeraddr[2]} => #{r.method} #{r.path}"
             handler.run(r, client)
 
+            if r.httpver == "HTTP/1.1"
+              if !r.headers[:Host]
+                client.puts ErrorResponse.new(400).response.to_s
+                client.close
+                Thread.exit
+              end
+            end
+
             if r.httpver == "HTTP/1.0" || r.headers[:Connection] == "close"
               client.close
               Thread.exit

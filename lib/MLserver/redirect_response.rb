@@ -7,7 +7,7 @@ module MLserver
     end
 
     def response
-      return Response.new(status: @type, headers: {Location: @url}, data: "Redirecting... If you don't get redirected, go to the following URL: #{@url}", httpver: @httpver)
+      return Response.new(status: @type, headers: {Location: @url, Connection: "close"}, data: "Redirecting... If you don't get redirected, go to the following URL: #{@url}", httpver: @httpver)
     end
   end
 end

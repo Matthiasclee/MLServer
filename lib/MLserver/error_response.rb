@@ -50,7 +50,7 @@ module MLserver
     end
 
     def response
-      return Response.new(status: @code, data: html_page, content_type: "text/html", httpver: @httpver)
+      return Response.new(status: @code, data: html_page, content_type: "text/html", httpver: @httpver, headers: {Connection: "close"})
     end
 
     def html_page
