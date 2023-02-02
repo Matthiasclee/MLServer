@@ -5,10 +5,11 @@ module MLserver
       "Content-Type": "text/plain"
     }
 
-    def initialize(status:200, headers:{}, data:"")
-      @status = 200
+    def initialize(status:200, headers:{}, data:"", content_type: nil)
+      @status = status
       @data = data
       @headers = @@default_headers.merge(response_specific_headers).merge(headers)
+      @headers[:"Content-Type"] = content_type if content_type
     end
 
     def to_s(array:false)

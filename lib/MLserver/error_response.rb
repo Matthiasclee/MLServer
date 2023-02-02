@@ -49,7 +49,7 @@ module MLserver
     end
 
     def response
-      return Response.new(status: @code, data: html_page)
+      return Response.new(status: @code, data: html_page, content_type: "text/html")
     end
 
     def html_page
