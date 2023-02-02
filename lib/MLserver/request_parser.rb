@@ -20,7 +20,7 @@ module MLserver
           keepReading = false
         else
           begin
-            headers[x.split(": ")[0]] = x.split(": ")[1].chomp
+            headers[x.split(": ")[0].to_sym] = x.split(": ")[1].chomp
           rescue => error
             error(client, 500, error)
           end

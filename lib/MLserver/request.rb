@@ -9,7 +9,7 @@ module MLserver
     end
 
     def method
-      @request_split[0]
+      @request_split[0].upcase
     end
 
     def path
