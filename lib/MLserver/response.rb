@@ -5,15 +5,16 @@ module MLserver
       "Content-Type": "text/plain"
     }
 
-    def initialize(status:200, headers:{}, data:"", content_type: nil)
+    def initialize(status:200, headers:{}, data:"", content_type: nil, httpver: "HTTP/1.1")
       @status = status
       @data = data
+      @httpver = httpver
       @headers = @@default_headers.merge(response_specific_headers).merge(headers)
       @headers[:"Content-Type"] = content_type if content_type
     end
 
     def to_s(array:false)
-      status_line = "HTTP/1.1 #{status}"
+      status_line = "#{httpver} #{status}"
       headers = @headers.map { |header|
         k=header[0].to_s
         v=header[1].to_s
@@ -26,7 +27,7 @@ module MLserver
       return [status_line, headers, "", data, ""] if array
     end
 
-    attr_reader :status, :headers, :data
+    attr_reader :status, :headers, :data, :httpver
 
     private
 

@@ -7,6 +7,8 @@ module MLserver
 
       req = client.gets
 
+      req = client.gets if !req
+
       #Close if bad request
       if req.to_s.length < 3
         #close(client)

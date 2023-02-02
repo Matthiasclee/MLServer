@@ -42,14 +42,15 @@ module MLserver
       511 => "network authentication required"
     }
 
-    def initialize(code, message: nil)
+    def initialize(code, message: nil, httpver: "HTTP/1.1")
       code = code.to_i
       @code = code
       @message = message ? message : "Error: #{code} (#{@@error_messages_by_code[code]})"
+      @httpver = httpver
     end
 
     def response
-      return Response.new(status: @code, data: html_page, content_type: "text/html")
+      return Response.new(status: @code, data: html_page, content_type: "text/html", httpver: @httpver)
     end
 
     def html_page
