@@ -5,9 +5,11 @@ module MLserver
       headers = {}
       data = ""
 
-      req = client.gets
+      req = client.gets.to_s
 
-      req = client.gets if !req
+      while req == "" do
+        req = client.gets.to_s
+      end
 
       #Close if bad request
       if req.to_s.length < 3
