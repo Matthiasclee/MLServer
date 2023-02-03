@@ -12,9 +12,10 @@ module MLserver
       end
 
       #Close if bad request
-      if req.to_s.length < 3
-        #close(client)
-        #Thread.exit
+      if req.to_s.length < 14
+        client.puts ErrorResponse.new(400).response.to_s
+        client.close
+        Thread.exit
       end
 
       #Get all headers
