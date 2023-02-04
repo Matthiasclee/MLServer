@@ -7,7 +7,7 @@ module MLserver
 
       req = client.gets.to_s
 
-      while req == "" do
+      while req.gsub("\r\n", "") == "" do
         req = client.gets.to_s
       end
 
@@ -33,7 +33,7 @@ module MLserver
       end
 
       #Get payload data
-      data = client.read(headers["Content-Length"].to_i)
+      data = client.read(headers[:"Content-Length"].to_i)
 
       return Request.new(headers: headers, request: req, data: data)
     end
