@@ -2,7 +2,12 @@ module MLserver
   module Server
     @@valid_http_versions = ["HTTP/1.0", "HTTP/1.1"]
 
-    def self.start(host: "0.0.0.0", port: 80, handler:, logger:)
+    def self.start(settings)
+      host = settings.host
+      port = settings.port
+      handler = settings.handler
+      logger = settings.logger
+
       logger.log "MLserver #{MLserver.version}"
 
       server = TCPServer.new(host, port)

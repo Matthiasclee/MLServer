@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
     "lib/MLserver/logger.rb",
     "lib/MLserver/error_response.rb",
     "lib/MLserver/redirect_response.rb",
+    "lib/MLserver/settings.rb",
   ] + exe.map{|i|"bin/#{i}"}
   s.executables = exe
   s.add_runtime_dependency "argparse", '~> 0.0.3'
