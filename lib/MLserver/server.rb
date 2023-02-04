@@ -39,6 +39,12 @@ module MLserver
                 client.puts ErrorResponse.new(400).response.to_s
                 client.close
                 Thread.exit
+              elsif settings.force_host
+                if !settings.force_host.include?(r.headers[:Host])
+                  client.puts ErrorResponse.new(400).response.to_s
+                  client.close
+                  Thread.exit
+                end
               end
             end
 
