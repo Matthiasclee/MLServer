@@ -24,11 +24,12 @@ module MLserver
         if x.chomp.length == 0
           keepReading = false
         else
-          begin
-            headers[x.split(": ")[0].to_sym] = x.split(": ")[1].chomp
-          rescue => error
-            error(client, 500, error)
+          if x.split(": ").length < 2
+            client.puts ErrorResponse.new(400).response.to_s
+            client.close
+            Thread.exit
           end
+          headers[x.split(": ")[0].to_sym] = x.split(": ")[1].chomp
         end
       end
 
