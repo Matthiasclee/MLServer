@@ -1,4 +1,8 @@
-$ver = "MLServer 0.3.731"
+$newver_data="MLserver 0.3.731 with extended support"
+STDERR.puts "MLserver versions 0.x.x are deprecated. Please switch to a 1.x.x version as soon as possible."
+STDERR.puts "https://github.com/Matthiasclee/MLServer"
+
+$ver = "MLServer 0.3.731_extendedsupport"
 $ver_1 = $ver.split(" ")[1].split(".")[0]
 $ver_2 = $ver.split(" ")[1].split(".")[1]
 $ver_3 = $ver.split(" ")[1].split(".")[2]
@@ -22,32 +26,6 @@ require "csv"
 $clients = [] #Array that stores all open clients
 $aacl = true
 if $SRV_SETTINGS[:check_for_assets]
-	if Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb")) != File.read(__FILE__)
-		puts "#{Time.now.ctime.split(" ")[3]} | A new version of MLServer is available (#{eval Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb")).split("\n")[0].sub("$", "new_")})"
-		if $SRV_SETTINGS[:auto_get_new_versions]
-			puts "#{Time.now.ctime.split(" ")[3]} | Fetching new version"
-			newver = Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/server.rb"))
-			if $SRV_SETTINGS[:auto_confirm_overwrite]
-				puts "#{Time.now.ctime.split(" ")[3]} | auto_confirm_overwrite is on; skipping confirmation"
-			else
-				print "#{Time.now.ctime.split(" ")[3]} | Confirming update of current server file (Y/n) "
-			end
-			if $SRV_SETTINGS[:auto_confirm_overwrite] || gets.chomp.downcase == "y"
-				print "#{Time.now.ctime.split(" ")[3]} | Writing new version... "
-				begin
-					File.write(__FILE__, newver)
-					puts "Done!"
-				rescue
-					puts "Fail"
-					puts "Oops, something went wrong. Please ensure that #{$0} has access to write to #{File.dirname(__FILE__)}"
-				end
-				puts "#{Time.now.ctime.split(" ")[3]} | Updated, please restart the program."
-				exit
-			else
-				puts "#{Time.now.ctime.split(" ")[3]} | Update cancelled"
-			end
-		end
-	end
 	puts "#{Time.now.ctime.split(" ")[3]} | Checking for assets..."
 	if !File.directory?("./.server_assets")
 		print "#{Time.now.ctime.split(" ")[3]} | Creating assets directory... "
@@ -71,14 +49,14 @@ if $SRV_SETTINGS[:check_for_assets]
 	end
 	if !File.exists?("./.server_assets/server_assets.txt")
 		print "#{Time.now.ctime.split(" ")[3]} | Fetching server assets list... "
-		File.write("./.server_assets/server_assets.txt", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/main/.server_assets/server_assets.txt")))
+		File.write("./.server_assets/server_assets.txt", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/Matthiasclee/MLServer/d1780643d05a9852f806fc0867c38578a7743940/.server_assets/server_assets.txt")))
 		puts "Done"
 	end
 	for asset in File.read("./.server_assets/server_assets.txt").split("\n") do
 		asset = asset.split("|")
 		if !File.exist?(asset[0])
 			print "#{Time.now.ctime.split(" ")[3]} | Fetching #{asset[1]}... "
-			File.write(asset[0], Net::HTTP.get(URI.parse(asset[2])))
+      File.write(asset[0], Net::HTTP.get(URI.parse(asset[2].gsub("MLServer/main", "MLServer/d1780643d05a9852f806fc0867c38578a7743940"))))
 			puts "Done"
 		end
 	end
@@ -311,7 +289,7 @@ def start(params = {"host" => "0.0.0.0", "port" => 80})
 	puts "#{Time.now.ctime.split(" ")[3]} | Completed in #{time.to_s} second#{"s" if time != 1}."
 	if defined?(main) #legacy program support
 		puts "#{Time.now.ctime.split(" ")[3]} | Using main() to house your program code is deprecated. If main() is defined for other reasons, ignore this message."
-		main
+    main
 	end
 	$lfc4 = true
 	$lfc6 = true
