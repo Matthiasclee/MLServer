@@ -1,4 +1,4 @@
-$newver_data="MLserver 0.3.731 with extended support"
+$newver_data="MLserver 0.3.731 with extended support - immediate update recommended"
 STDERR.puts "MLserver versions 0.x.x are deprecated. Please switch to a 1.x.x version as soon as possible."
 STDERR.puts "https://github.com/Matthiasclee/MLServer"
 
