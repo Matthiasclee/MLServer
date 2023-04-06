@@ -22,7 +22,8 @@ module MLserver
     end
 
     def respond(response)
-      @client.puts response
+      puts "#{@client.peeraddr[2]} <= #{response.httpver} #{response.status}"
+      @client.puts response.to_s
     end
 
     attr_reader :headers, :request, :data

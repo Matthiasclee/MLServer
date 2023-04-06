@@ -31,7 +31,7 @@ module MLserver
               Thread.exit
             end
 
-            logger.log "#{client.peeraddr[2]} => #{r.method} #{r.path}"
+            logger.log "#{client.peeraddr[2]} => #{r.method} #{r.path} #{r.httpver}"
             handler.run(r, client)
 
             if r.httpver == "HTTP/1.1"
