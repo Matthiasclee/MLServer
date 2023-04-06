@@ -2,7 +2,9 @@ module MLserver
   module Server
     @@valid_http_versions = ["HTTP/1.0", "HTTP/1.1"]
 
-    def self.start(settings)
+    def self.start
+      settings = MLserver.settings
+
       host = settings.host
       port = settings.port
       handler = settings.handler
