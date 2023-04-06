@@ -1,9 +1,3 @@
 #!/usr/bin/env ruby
 
 require "MLserver"
-h = MLserver::ClientHandler.new do |request, client|
-  r = MLserver::ErrorResponse.new(404)
-  client.puts r.response.to_s
-end
-
-MLserver::Server.start(port:5555, handler: h, logger: MLserver::DefaultLogger)
