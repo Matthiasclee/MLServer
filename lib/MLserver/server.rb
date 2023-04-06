@@ -21,7 +21,7 @@ module MLserver
           loop do
             r=RequestParser.parse_request(client)
 
-            logger.log "#{client.peeraddr[2]} => #{r.method} #{r.path} #{r.httpver}"
+            logger.log_traffic client.peeraddr[2], :incoming, "#{r.method} #{r.path} #{r.httpver}"
 
             if !@@valid_http_versions.include?(r.httpver)
               client_ip = client.peeraddr[2]

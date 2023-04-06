@@ -18,6 +18,12 @@ module MLserver
       end
       out.puts message
     end
+
+    def log_traffic(ip, direction, data)
+      symbol = (direction == :incoming ? "=>" : "<=")
+
+      log("#{ip} #{symbol} #{data}")
+    end
   end
 
   dlcolors = {

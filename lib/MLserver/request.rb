@@ -22,7 +22,7 @@ module MLserver
     end
 
     def respond(response)
-      MLserver.settings.logger.log "#{@client.peeraddr[2]} <= #{response.httpver} #{response.status}"
+      MLserver.settings.logger.log_traffic @client.peeraddr[2], :outgoing, "#{response.httpver} #{response.status}"
       @client.puts response.to_s
     end
 
