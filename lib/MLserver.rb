@@ -5,6 +5,8 @@ module MLserver
 end
 
 require "socket"
+require "rbtext"
+require "rbtext/string_methods"
 require_relative "MLserver/request.rb"
 require_relative "MLserver/request_parser.rb"
 require_relative "MLserver/response.rb"
