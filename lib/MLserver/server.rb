@@ -14,7 +14,7 @@ module MLserver
 
       server = TCPServer.new(host, port)
 
-      logger.log "Listening on #{host}:#{port}"
+      logger.log "Listening on #{logger.format_ip_address host}:#{port}"
 
       loop do
         Thread.start(server.accept) do |client|
