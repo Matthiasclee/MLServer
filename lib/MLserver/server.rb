@@ -21,34 +21,33 @@ module MLserver
           loop do
             r=RequestParser.parse_request(client)
 
+            logger.log "#{client.peeraddr[2]} => #{r.method} #{r.path} #{r.httpver}"
+
             if !@@valid_http_versions.include?(r.httpver)
               client_ip = client.peeraddr[2]
 
               resp = MLserver::ErrorResponse.new(505)
-              client.puts resp.response.to_s
+              r.respond resp.response
               client.close
-
-              logger.log "Closed connection from #{client_ip}: Unsupported HTTP method (#{r.httpver})"
 
               Thread.exit
             end
 
-            logger.log "#{client.peeraddr[2]} => #{r.method} #{r.path} #{r.httpver}"
-            handler.run(r, client)
-
             if r.httpver == "HTTP/1.1"
               if !r.headers[:Host]
-                client.puts ErrorResponse.new(400).response.to_s
+                r.respond ErrorResponse.new(400).response
                 client.close
                 Thread.exit
               elsif settings.force_host
                 if !settings.force_host.include?(r.headers[:Host])
-                  client.puts ErrorResponse.new(400).response.to_s
+                  r.respond ErrorResponse.new(400).response
                   client.close
                   Thread.exit
                 end
               end
             end
+
+            handler.run(r, client)
 
             if r.httpver == "HTTP/1.0" || r.headers[:Connection] == "close"
               client.close
