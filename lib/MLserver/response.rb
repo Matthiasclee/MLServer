@@ -27,7 +27,7 @@ module MLserver
       return [status_line, headers, "", data, ""] if array
     end
 
-    attr_reader :status, :headers, :data, :httpver
+    attr_accessor :status, :headers, :data, :httpver
 
     private
 
