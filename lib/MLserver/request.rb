@@ -1,9 +1,10 @@
 module MLserver
   class Request
-    def initialize(headers: {}, request:, data: "")
+    def initialize(headers: {}, request:, data: "", client:)
       @headers = headers
       @request = request
       @data = data
+      @client = client
 
       @request_split = @request.split(" ")
     end
@@ -18,6 +19,10 @@ module MLserver
 
     def httpver
       @request_split[2]
+    end
+
+    def respond(response)
+      @client.puts response
     end
 
     attr_reader :headers, :request, :data

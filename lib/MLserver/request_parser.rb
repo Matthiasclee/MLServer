@@ -36,7 +36,7 @@ module MLserver
       #Get payload data
       data = client.read(headers[:"Content-Length"].to_i)
 
-      return Request.new(headers: headers, request: req, data: data)
+      return Request.new(headers: headers, request: req, data: data, client: client)
     end
   end
 end
