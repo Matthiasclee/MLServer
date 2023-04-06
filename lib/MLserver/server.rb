@@ -28,7 +28,7 @@ module MLserver
               client.puts resp.response.to_s
               client.close
 
-              logger.log "Closed connection from #{client_ip}: Unsupported HTTP method (#{r.httpver})", :error
+              logger.log "Closed connection from #{client_ip}: Unsupported HTTP method (#{r.httpver})"
 
               Thread.exit
             end

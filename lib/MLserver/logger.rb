@@ -20,5 +20,10 @@ module MLserver
     end
   end
 
-  DefaultLogger = Logger.new(out: STDOUT, err: STDERR)
+  dlcolors = {
+    warn: :yellow,
+    error: :red
+  }
+
+  DefaultLogger = Logger.new(out: STDOUT, err: STDERR, log_colors: dlcolors)
 end
