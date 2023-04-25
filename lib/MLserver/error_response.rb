@@ -54,7 +54,8 @@ module MLserver
     end
 
     def html_page
-      return File.read(File.dirname(__FILE__) + "/html/error_page.template.html").gsub("[ecode]", @code.to_s).gsub("[emsg]", @message)
+      footer = File.read(File.dirname(__FILE__) + "/html/default_response_footer.template.html").gsub("[ver]", MLserver.version).gsub("[date]", Time.now.to_s)
+      return File.read(File.dirname(__FILE__) + "/html/error_page.template.html").gsub("[ecode]", @code.to_s).gsub("[emsg]", @message).gsub("[ftr]", footer)
     end
   end
 end

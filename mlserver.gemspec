@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.email       = 'matthias@matthiasclee.com'
   s.files       = [
     "lib/MLserver/html/error_page.template.html",
+    "lib/MLserver/html/default_response_footer.template.html",
     "lib/MLserver.rb",
     "lib/MLserver/request_parser.rb",
     "lib/MLserver/request.rb",
