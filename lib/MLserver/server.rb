@@ -47,7 +47,13 @@ module MLserver
               end
             end
 
-            handler.run(r, client)
+            begin
+              handler.run(r, client)
+            rescue => e
+              r.respond ErrorResponse.new(500).response
+              logger.log "An error occured: #{e.message}", :error
+              raise e
+            end
 
             if r.httpver == "HTTP/1.0" || r.headers[:Connection] == "close"
               client.close
