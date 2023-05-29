@@ -34,8 +34,22 @@ module MLserver
       logger.log "Listening on #{logger.format_ip_address host}:#{port}"
 
       loop do
-        Thread.start(server.accept) do |client|
+        begin
+          client = server.accept
+        rescue OpenSSL::SSL::SSLError => e
+          logger.log "SSL error occured: #{e}", :error
+          client.close if client
+          next
+        end
+
+        Thread.start(client) do |client|
           loop do
+            #if !client.is_a?(OpenSSL::SSL::SSLSocket)
+            #  logger.log "HTTP connection to HTTPS server from #{logger.format_ip_address client.peeraddr[2]}", :error
+            #  client.close
+            #  Thread.exit
+            #end
+
             r=RequestParser.parse_request(client)
 
             logger.log_traffic client.peeraddr[2], :incoming, "#{r.method} #{r.path} #{r.httpver}"
