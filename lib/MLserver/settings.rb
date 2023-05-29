@@ -2,15 +2,19 @@ module MLserver
   @@settings = nil
 
   class Settings
-    def initialize(host: "0.0.0.0", port: "5555", handler: nil, logger: nil, force_host: false)
+    def initialize(host: "0.0.0.0", port: "5555")
       @host = host
       @port = port.to_i
-      @handler = handler
-      @logger = logger
-      @force_host = force_host
+      @handler = nil
+      @logger = nil
+      @force_host = nil
+      @ssl = nil
+      @ssl_key = nil
+      @ssl_cert = nil
+      @ssl_additional_certs = []
     end
 
-    attr_accessor :host, :port, :handler, :logger, :force_host
+    attr_accessor :host, :port, :handler, :logger, :force_host, :ssl, :ssl_key, :ssl_cert, :ssl_additional_certs
   end
 
   def self.settings
