@@ -1,2 +1,4 @@
 *.gem
 testing_server.rb
+bitcoin.png
+example.conf.rb

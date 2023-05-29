@@ -1,3 +1,16 @@
 #!/usr/bin/env ruby
 
 require "MLserver"
+require "argparse"
+
+MLserver.settings = MLserver::Settings.new()
+
+o = {}
+s = {}
+
+x = ArgsParser::Args.new(options: o, switches: s)
+
+conf_file = x.data[0]
+require_relative conf_file
+
+MLserver::Server.start()
