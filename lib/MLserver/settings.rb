@@ -12,9 +12,11 @@ module MLserver
       @ssl_key = nil
       @ssl_cert = nil
       @ssl_additional_certs = []
+      @ssl_host = nil
+      @ssl_port  = nil
     end
 
-    attr_accessor :host, :port, :handler, :logger, :force_host, :ssl, :ssl_key, :ssl_cert, :ssl_additional_certs
+    attr_accessor :host, :port, :handler, :logger, :force_host, :ssl, :ssl_key, :ssl_cert, :ssl_additional_certs, :ssl_host, :ssl_port
   end
 
   def self.settings
