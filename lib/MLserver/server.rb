@@ -43,54 +43,57 @@ module MLserver
         end
 
         Thread.start(client) do |client|
-          loop do
-            #if !client.is_a?(OpenSSL::SSL::SSLSocket)
-            #  logger.log "HTTP connection to HTTPS server from #{logger.format_ip_address client.peeraddr[2]}", :error
-            #  client.close
-            #  Thread.exit
-            #end
+          self.handle_client client
+        end
+      end
+    end
 
-            r=RequestParser.parse_request(client)
+    def self.handle_client(client)
+      settings = MLserver.settings
 
-            logger.log_traffic client.peeraddr[2], :incoming, "#{r.method} #{r.path} #{r.httpver}"
+      logger = MLserver.settings.logger
+      handler = MLserver.settings.handler
 
-            if !@@valid_http_versions.include?(r.httpver)
-              client_ip = client.peeraddr[2]
+      loop do
+        r=RequestParser.parse_request(client)
 
-              resp = MLserver::ErrorResponse.new(505)
-              r.respond resp.response
-              client.close
+        logger.log_traffic client.peeraddr[2], :incoming, "#{r.method} #{r.path} #{r.httpver}"
 
-              Thread.exit
-            end
+        if !@@valid_http_versions.include?(r.httpver)
+          client_ip = client.peeraddr[2]
 
-            if r.httpver == "HTTP/1.1"
-              if !r.headers[:Host]
-                r.respond ErrorResponse.new(400).response
-                client.close
-                Thread.exit
-              elsif settings.force_host
-                if !settings.force_host.include?(r.headers[:Host])
-                  r.respond ErrorResponse.new(400).response
-                  client.close
-                  Thread.exit
-                end
-              end
-            end
+          resp = MLserver::ErrorResponse.new(505)
+          r.respond resp.response
+          client.close
 
-            begin
-              handler.run(r, client)
-            rescue => e
-              r.respond ErrorResponse.new(500).response
-              logger.log "An error occured: #{e.message}", :error
-              raise e
-            end
+          Thread.exit
+        end
 
-            if r.httpver == "HTTP/1.0" || r.headers[:Connection] == "close"
+        if r.httpver == "HTTP/1.1"
+          if !r.headers[:Host]
+            r.respond ErrorResponse.new(400).response
+            client.close
+            Thread.exit
+          elsif settings.force_host
+            if !settings.force_host.include?(r.headers[:Host])
+              r.respond ErrorResponse.new(400).response
               client.close
               Thread.exit
             end
           end
+        end
+
+        begin
+          handler.run(r, client)
+        rescue => e
+          r.respond ErrorResponse.new(500).response
+          logger.log "An error occured: #{e.message}", :error
+          raise e
+        end
+
+        if r.httpver == "HTTP/1.0" || r.headers[:Connection] == "close"
+          client.close
+          Thread.exit
         end
       end
     end
