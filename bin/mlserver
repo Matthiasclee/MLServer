@@ -11,6 +11,16 @@ s = {}
 x = ArgsParser::Args.new(options: o, switches: s)
 
 conf_file = x.data[0]
+
+if !conf_file
+  conf_file = "mlserver.conf.rb"
+end
+
+if !File.exist?(conf_file)
+  STDERR.puts "Error: Conf file does not exist"
+  exit 1
+end
+
 full_conf_file_path = File.expand_path(conf_file, Dir.pwd)
 
 Dir.chdir(File.dirname full_conf_file_path)
