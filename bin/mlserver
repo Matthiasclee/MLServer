@@ -12,8 +12,6 @@ x = ArgsParser::Args.new(options: o, switches: s)
 
 conf_file = x.data[0]
 
-puts File.expand_path(conf_file, __FILE__)
-
 require File.expand_path(conf_file, Dir.pwd)
 
 MLserver::Server.start()
