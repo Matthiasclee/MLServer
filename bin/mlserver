@@ -16,6 +16,10 @@ if !conf_file
   conf_file = "mlserver.conf.rb"
 end
 
+if File.directory?(conf_file)
+  conf_file = "#{conf_file}/mlserver.conf.rb"
+end
+
 if !File.exist?(conf_file)
   STDERR.puts "Error: Conf file does not exist"
   exit 1
