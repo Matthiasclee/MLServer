@@ -1,6 +1,6 @@
 module MLserver
   class Logger
-    @@log_levels = [:info, :warn, :error]
+    @@log_levels = [:info, :warn, :error, :traffic_in, :traffic_out]
 
     def initialize(out:, err:, log_colors: {}, outputs: {error: :err})
       @out = out
@@ -38,13 +38,15 @@ module MLserver
     def log_traffic(ip, direction, data)
       symbol = (direction == :incoming ? "=>" : "<=")
 
-      log("#{format_ip_address ip} #{symbol} #{data}")
+      log("#{format_ip_address ip} #{symbol} #{data}", (direction == :incoming ? :traffic_in : :traffic_out))
     end
   end
 
   dlcolors = {
     warn: :yellow,
-    error: :red
+    error: :red,
+    traffic_in: :green,
+    traffic_out: :blue
   }
 
   DefaultLogger = Logger.new(out: STDOUT, err: STDERR, log_colors: dlcolors)
