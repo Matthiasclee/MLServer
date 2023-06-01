@@ -2,11 +2,12 @@ module MLserver
   class Logger
     @@log_levels = [:info, :warn, :error, :traffic_in, :traffic_out]
 
-    def initialize(out:, err:, log_colors: {}, outputs: {error: :err})
+    def initialize(out:, err:, log_colors: {}, outputs: {error: :err}, levels_with_timestamp: [:traffic_in, :traffic_out])
       @out = out
       @err = err
       @log_colors = log_colors
       @outputs = outputs
+      @levels_with_timestamp = levels_with_timestamp
     end
 
     def log(message, level = :info)
@@ -16,6 +17,9 @@ module MLserver
       if @log_colors[level]
         message = message.color @log_colors[level]
       end
+
+      message = "#{Time.now} | #{message}" if @levels_with_timestamp.include?(level)
+
       out.puts message
     end
 
