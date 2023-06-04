@@ -28,6 +28,8 @@ settings.logger = MLserver::DefaultLogger # Logger
   * Required HTTP `Host` header values in an array
   * Set as `false` to allow any host
   * EX: `["www.example.com", "example.com"]`
+* `settings.handler`
+  * Client handler to use
 * `settings.ssl`
   * Enable SSL?
   * Default: `nil` or `false`
@@ -43,5 +45,3 @@ settings.logger = MLserver::DefaultLogger # Logger
   * SSL port
 * `settings.ssl_host`
   * Interface/hostname for SSL server to listen on
-* `settings.handler`
-  * Client handler to use
