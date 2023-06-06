@@ -41,5 +41,6 @@ require_relative "app.rb" # Require the file with the client handler
 settings.handler = Handler # Set the client handler
 ```
 (See [config][1])
+
 [1]: https://github.com/Matthiasclee/MLServer/blob/master/docs/config.md
 [2]: https://github.com/Matthiasclee/MLServer/blob/master/docs/requests.md
