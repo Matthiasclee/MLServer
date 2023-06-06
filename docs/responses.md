@@ -43,5 +43,8 @@ r.response
 To respond with a response, use the `Request#respond` method as follows:
 ```rb
 # ...
-response.respond r
+request.respond r
 ```
+(See [requests][1])
+
+[1]: https://github.com/Matthiasclee/MLServer/blob/master/docs/requests.md

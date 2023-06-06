@@ -6,4 +6,6 @@
 * `headers`: Request headers
 * `request`: HTTP request line (`GET / HTTP/1.1`)
 * `data`: Request data
-* `respond`: Respond to the request
+* `respond`: Respond to the request (see [responses][1])
+
+[1]: https://github.com/Matthiasclee/MLServer/blob/master/docs/responses.md

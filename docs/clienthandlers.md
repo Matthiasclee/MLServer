@@ -6,7 +6,7 @@ processes the request and makes a response.
 Create a new ruby file in the same directory as the config file.
 In this file, make a new `MLserver::ClientHandler`, and set it as
 a constant. Pass it a block, and have it take in two variables: `rq`
-and `c`. `rq` is the client's request, and `c` is the client itself.
+and `c`. `rq` is the client's request (see [requests][2]), and `c` is the client itself.
 ```rb
 Handler = MLserver::ClientHandler.new do |rq, c|
 end
@@ -40,3 +40,6 @@ MLserver.settings = settings
 require_relative "app.rb" # Require the file with the client handler
 settings.handler = Handler # Set the client handler
 ```
+(See [config][1])
+[1]: https://github.com/Matthiasclee/MLServer/blob/master/docs/config.md
+[2]: https://github.com/Matthiasclee/MLServer/blob/master/docs/requests.md
