@@ -28,6 +28,7 @@ end
 
 ## Using the client handler
 Now that we have a client handler, we have to actually use it by specifying it in the settings.
+<br>
 `mlserver.conf.rb`
 ```rb
 settings = MLserver::Settings.new
