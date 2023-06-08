@@ -36,6 +36,10 @@ settings.logger = MLserver::DefaultLogger # Logger
 * `settings.ssl`
   * Enable SSL?
   * Default: `nil` or `false`
+* `trim_urls`
+  * Remove trailing slashes from request paths
+  * EX: `/index.html/` => `/index.html`
+  * Default: `false`
 #### SSL settings
 Only required if SSL is enabled
 * `settings.ssl_key`
