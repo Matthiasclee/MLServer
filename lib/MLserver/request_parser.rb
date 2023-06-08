@@ -7,6 +7,16 @@ module MLserver
 
       req = client.gets.to_s
 
+      if MLserver.settings.trim_urls
+        m, p, v = req.split(" ")
+
+        p.gsub!(/\/$/, "")
+        p = ?/ if p == ""
+
+        nreq = "#{m} #{p} #{v}"
+        req = nreq
+      end
+
       while req.gsub("\r\n", "") == "" do
         req = client.gets.to_s
       end
