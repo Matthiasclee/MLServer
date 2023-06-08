@@ -6,6 +6,8 @@ settings.port = 8080
 settings.logger = MLserver::DefaultLogger
 settings.force_host = false
 
+settings.trim_urls = true
+
 # SSL
 settings.ssl = true
 settings.ssl_key = "ssl/server.key"
