@@ -103,6 +103,12 @@ module MLserver
           end
         end
 
+        if MLserver.settings.trim_urls && r.path != "/" && r.path[-1] == "/"
+          r.respond RedirectResponse.new(r.path[0..-2], type: 301, httpver: "HTTP/1.0").response
+          client.close
+          Thread.exit
+        end
+
         begin
           handler.run(r, client)
         rescue => e
