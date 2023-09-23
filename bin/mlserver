@@ -31,4 +31,8 @@ Dir.chdir(File.dirname full_conf_file_path)
 
 require full_conf_file_path
 
-MLserver::Server.start()
+begin
+  MLserver::Server.start()
+rescue Interrupt
+  MLserver.settings.logger.log("\nReceived Interrupt, Exiting...", :error)
+end
