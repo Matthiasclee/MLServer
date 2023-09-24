@@ -55,5 +55,5 @@ Only required if SSL is enabled
 * `settings.ssl_host`
   * Interface/hostname for SSL server to listen on
 
-[1]: https://github.com/Matthiasclee/MLServer/blob/master/docs/logger.md
-[2]: https://github.com/Matthiasclee/MLServer/blob/master/docs/clienthandlers.md
+[1]: logger.md
+[2]: clienthandlers.md

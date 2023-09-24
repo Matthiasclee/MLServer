@@ -8,4 +8,4 @@
 * `data`: Request data
 * `respond`: Respond to the request (see [responses][1])
 
-[1]: https://github.com/Matthiasclee/MLServer/blob/master/docs/responses.md
+[1]: responses.md

@@ -47,4 +47,4 @@ request.respond r
 ```
 (See [requests][1])
 
-[1]: https://github.com/Matthiasclee/MLServer/blob/master/docs/requests.md
+[1]: requests.md
