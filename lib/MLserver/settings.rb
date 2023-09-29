@@ -15,10 +15,11 @@ module MLserver
       @ssl_host = nil
       @ssl_port  = nil
       @trim_urls = false
+      @max_connections = 1000
     end
 
     attr_accessor :host, :port, :handler, :logger, :force_host, :ssl, :ssl_key, :ssl_cert, :ssl_additional_certs, :ssl_host, :ssl_port,
-                  :trim_urls
+                  :trim_urls, :max_connections
   end
 
   def self.settings
