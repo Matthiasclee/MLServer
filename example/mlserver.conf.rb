@@ -8,6 +8,8 @@ settings.force_host = false
 
 settings.trim_urls = true
 
+settings.max_connections = 10
+
 # SSL
 settings.ssl = true
 settings.ssl_key = "ssl/server.key"
