@@ -40,6 +40,9 @@ settings.logger = MLserver::DefaultLogger # Logger
   * Remove trailing slashes from request paths
   * EX: `/index.html/` => `/index.html`
   * Default: `false`
+* `max_connections`
+  * Limits the number of concurrent connections
+  * Default: `1000`
 #### SSL settings
 Only required if SSL is enabled
 * `settings.ssl_key`
