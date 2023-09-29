@@ -44,6 +44,10 @@ module MLserver
               logger.log "SSL error occured: #{e}", :error
               client.close if client
               next
+            rescue Errno::ECONNRESET => e
+              logger.log "SSL Connection reset: #{e}", :error
+              client.close if client
+              next
             end
 
             Thread.start(client) do |client|
