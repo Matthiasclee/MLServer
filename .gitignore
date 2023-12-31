@@ -1,5 +1,5 @@
 *.gem
-testing_server.rb
+testing_server/
 bitcoin.png
 example.conf.rb
 changelog.ignore
