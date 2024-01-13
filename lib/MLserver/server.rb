@@ -11,6 +11,7 @@ module MLserver
       ssl_port = settings.ssl_port
       handler = settings.handler
       logger = settings.logger
+      @@use_http_versions = @@valid_http_versions - (@@valid_http_versions - settings.use_http_versions)
 
       logger.log "MLserver #{MLserver.version}"
 
@@ -83,7 +84,7 @@ module MLserver
 
         logger.log_traffic client.peeraddr[2], :incoming, "#{r.method} #{r.path} #{r.httpver}"
 
-        if !@@valid_http_versions.include?(r.httpver)
+        if !@@use_http_versions.include?(r.httpver)
           client_ip = client.peeraddr[2]
 
           resp = MLserver::ErrorResponse.new(505)
