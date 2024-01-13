@@ -2,7 +2,7 @@ module MLserver
   @@settings = nil
 
   class Settings
-    def initialize(host: "0.0.0.0", port: "5555")
+    def initialize(host: "0.0.0.0", port: "8080")
       @host = host
       @port = port.to_i
       @handler = nil
