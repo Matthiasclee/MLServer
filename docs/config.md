@@ -40,6 +40,10 @@ settings.logger = MLserver::DefaultLogger # Logger
   * Remove trailing slashes from request paths
   * EX: `/index.html/` => `/index.html`
   * Default: `false`
+* `use_http_versions`
+  * Only use specified HTTP versions
+  * EX: `["HTTP/1.0", "HTTP/1.1"]`
+  * Default: `["HTTP/1.0", "HTTP/1.1"]`
 #### SSL settings
 Only required if SSL is enabled
 * `settings.ssl_key`
